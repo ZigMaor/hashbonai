@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+._*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Claude Code
+.claude/
+
+# Node (in case)
+node_modules/
+
+# Logs
+*.log

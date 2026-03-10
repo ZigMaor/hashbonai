@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SECURITY: Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'">
+    <!-- SECURITY: Prevent referrer leakage -->
+    <meta name="referrer" content="no-referrer">
+    <!-- ACCESSIBILITY: Unique descriptive Hebrew title -->
+    <title>חשבונאי - הרפתקת חשבון ושפה!</title>
+    <link rel="stylesheet" href="style.css?v=10">
+</head>
+<body>
+
+    <!-- ACCESSIBILITY: Skip to main content link (ניווט מקלדת) -->
+    <a href="#main-content" class="skip-link" id="skip-link">דלג לתוכן הראשי</a>
+
+    <!-- ACCESSIBILITY: Accessibility toggle button (fixed position) -->
+    <button class="a11y-toggle-btn" id="a11y-toggle-btn"
+            aria-label="פתח תפריט נגישות"
+            aria-expanded="false"
+            aria-controls="a11y-panel"
+            onclick="App.toggleA11yPanel()">
+        <span aria-hidden="true">♿</span>
+    </button>
+
+    <!-- ACCESSIBILITY: Accessibility widget panel (ת.י. 5568 / WCAG 2.0 AA) -->
+    <aside id="a11y-panel" class="a11y-panel hidden" role="complementary" aria-label="הגדרות נגישות">
+        <div class="a11y-panel-header">
+            <h2>הגדרות נגישות</h2>
+            <button class="a11y-close-btn" aria-label="סגור תפריט נגישות" onclick="App.toggleA11yPanel()">✕</button>
+        </div>
+        <div class="a11y-panel-body">
+            <!-- ACCESSIBILITY: Font size controls -->
+            <div class="a11y-group">
+                <span class="a11y-label" id="a11y-fontsize-label">גודל טקסט</span>
+                <div class="a11y-btn-row" role="group" aria-labelledby="a11y-fontsize-label">
+                    <button class="a11y-btn a11y-btn-small" onclick="App.setFontSize('small')" aria-label="טקסט קטן">א</button>
+                    <button class="a11y-btn a11y-active" onclick="App.setFontSize('medium')" aria-label="טקסט בינוני">א</button>
+                    <button class="a11y-btn a11y-btn-large" onclick="App.setFontSize('large')" aria-label="טקסט גדול">א</button>
+                </div>
+            </div>
+            <!-- ACCESSIBILITY: High contrast toggle -->
+            <div class="a11y-group">
+                <label class="a11y-switch-label">
+                    <span>ניגודיות גבוהה</span>
+                    <button class="a11y-switch" role="switch" aria-checked="false" id="a11y-contrast-toggle"
+                            onclick="App.toggleHighContrast()">
+                        <span class="a11y-switch-knob"></span>
+                    </button>
+                </label>
+            </div>
+            <!-- ACCESSIBILITY: Stop animations toggle -->
+            <div class="a11y-group">
+                <label class="a11y-switch-label">
+                    <span>הפסקת אנימציות</span>
+                    <button class="a11y-switch" role="switch" aria-checked="false" id="a11y-anim-toggle"
+                            onclick="App.toggleAnimations()">
+                        <span class="a11y-switch-knob"></span>
+                    </button>
+                </label>
+            </div>
+            <!-- ACCESSIBILITY: Focus highlight toggle (הדגשת פוקוס) -->
+            <div class="a11y-group">
+                <label class="a11y-switch-label">
+                    <span>הדגשת פוקוס</span>
+                    <button class="a11y-switch" role="switch" aria-checked="false" id="a11y-focus-toggle"
+                            onclick="App.toggleFocusHighlight()">
+                        <span class="a11y-switch-knob"></span>
+                    </button>
+                </label>
+            </div>
+            <!-- ACCESSIBILITY: Read page aloud button (קריאת עמוד) -->
+            <div class="a11y-group">
+                <button class="a11y-btn a11y-btn-full" onclick="App.readPageAloud()" aria-label="קריאת תוכן העמוד בקול">
+                    🔊 קריאת עמוד
+                </button>
+                <button class="a11y-btn a11y-btn-full a11y-btn-stop hidden" id="a11y-stop-reading"
+                        onclick="App.stopReadingAloud()" aria-label="עצור קריאה">
+                    ⏹ עצור קריאה
+                </button>
+            </div>
+            <!-- ACCESSIBILITY: Reset button -->
+            <div class="a11y-group">
+                <button class="a11y-btn a11y-btn-full a11y-btn-reset" onclick="App.resetA11ySettings()">
+                    איפוס הגדרות נגישות
+                </button>
+            </div>
+            <!-- ACCESSIBILITY: Link to accessibility statement -->
+            <div class="a11y-group a11y-statement-link">
+                <a href="accessibility-statement.html" aria-label="עבור להצהרת נגישות">הצהרת נגישות</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Canvas for confetti effects -->
+    <!-- ACCESSIBILITY: decorative canvas hidden from screen readers -->
+    <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+    <!-- Mascot floating helper -->
+    <!-- ACCESSIBILITY: decorative mascot hidden from screen readers -->
+    <div id="mascot-float" class="mascot-float hidden" aria-hidden="true">
+        <div class="mascot-emoji">🦊</div>
+        <div class="mascot-bubble" id="mascot-bubble"></div>
+    </div>
+
+    <!-- ACCESSIBILITY: aria-live region for score announcements -->
+    <div id="score-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <!-- ACCESSIBILITY: aria-live region for feedback announcements -->
+    <div id="feedback-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+
+    <!-- ACCESSIBILITY: Main content landmark for skip link -->
+    <main id="main-content">
+
+    <!-- ==================== REGISTRATION SCREEN ==================== -->
+    <div id="screen-register" class="screen active" role="region" aria-label="מסך הרשמה">
+        <div class="register-container">
+            <!-- ACCESSIBILITY: decorative mascot -->
+            <div class="splash-mascot bounce" aria-hidden="true">🦊</div>
+            <h1 class="splash-title">חשבונאי</h1>
+            <p class="splash-subtitle">הרפתקת חשבון ושפה מיוחדת!</p>
+            <!-- ACCESSIBILITY: form element with proper labels linked via for/id -->
+            <form class="register-form" onsubmit="event.preventDefault(); App.registerAndStart();" aria-label="טופס הרשמה">
+                <label class="register-label" for="register-name">מה השם שלך?</label>
+                <input type="text" id="register-name" class="register-input" placeholder="הכניסו שם..." maxlength="20"
+                       aria-required="true"
+                       oninput="App.checkRegisterReady()"
+                       onkeydown="if(event.key==='Enter')event.preventDefault()">
+                <!-- ACCESSIBILITY: fieldset with legend for gender radio group -->
+                <fieldset class="gender-fieldset">
+                    <legend class="register-label">אתה בן או בת?</legend>
+                    <div class="gender-buttons" role="radiogroup" aria-label="בחירת מגדר">
+                        <button type="button" class="btn btn-gender" id="btn-gender-boy"
+                                role="radio" aria-checked="false"
+                                onclick="App.selectGender('boy')">👦 בן</button>
+                        <button type="button" class="btn btn-gender" id="btn-gender-girl"
+                                role="radio" aria-checked="false"
+                                onclick="App.selectGender('girl')">👧 בת</button>
+                    </div>
+                </fieldset>
+                <button type="submit" class="btn btn-primary btn-xl pulse" id="btn-register-start" disabled
+                        aria-disabled="true">
+                    !בואו נתחיל
+                    <span class="btn-icon" aria-hidden="true">🚀</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== SPLASH SCREEN ==================== -->
+    <div id="screen-splash" class="screen" role="region" aria-label="מסך פתיחה">
+        <div class="splash-container">
+            <!-- ACCESSIBILITY: decorative -->
+            <div class="splash-mascot bounce" aria-hidden="true">🦊</div>
+            <h1 class="splash-title">חשבונאי</h1>
+            <p class="splash-subtitle">הרפתקת חשבון ושפה מיוחדת!</p>
+            <div class="splash-stars" aria-hidden="true">⭐ 🌟 ✨ 🌟 ⭐</div>
+            <button class="btn btn-primary btn-xl pulse" onclick="App.startApp()">
+                <span id="splash-start-text">!בואו נתחיל</span>
+                <span class="btn-icon" aria-hidden="true">🚀</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== DASHBOARD SCREEN ==================== -->
+    <div id="screen-dashboard" class="screen" role="region" aria-label="לוח ראשי">
+        <header class="dashboard-header">
+            <!-- ACCESSIBILITY: decorative mascot -->
+            <div class="header-mascot" aria-hidden="true">🦊</div>
+            <div class="header-info">
+                <h1 id="dashboard-greeting">שלום! 👋</h1>
+                <button class="btn-edit-name" onclick="App.showChangeName()" aria-label="שנה שם">✏️</button>
+                <!-- ACCESSIBILITY: score display with aria-live for updates -->
+                <div class="score-display" aria-label="ניקוד נוכחי" aria-live="polite">
+                    <span class="score-icon" aria-hidden="true">⭐</span>
+                    <span class="score-value" id="dashboard-score">0</span>
+                    <span class="score-label">נקודות</span>
+                </div>
+            </div>
+            <button class="btn btn-small btn-parent" onclick="App.showParentLogin()" aria-label="כניסה לאזור הורים">👨‍👩‍👧 הורים</button>
+        </header>
+
+        <!-- ACCESSIBILITY: Progress bar with ARIA attributes -->
+        <div class="progress-container" role="progressbar"
+             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+             aria-label="התקדמות כללית" id="dashboard-progress-container">
+            <div class="progress-bar" id="dashboard-progress"></div>
+            <span class="progress-text" id="dashboard-progress-text" aria-hidden="true">0%</span>
+        </div>
+
+        <!-- ACCESSIBILITY: Milestone display with aria-label -->
+        <nav class="milestone-bar" id="milestone-bar" aria-label="אבני דרך">
+            <div class="milestone-item" data-points="100" aria-label="אבן דרך 100 נקודות" style="right: 6.67%;">
+                <span class="milestone-icon" aria-hidden="true">⭐</span>
+                <span class="milestone-label">100</span>
+            </div>
+            <div class="milestone-item" data-points="300" aria-label="אבן דרך 300 נקודות" style="right: 20%;">
+                <span class="milestone-icon" aria-hidden="true">🌟</span>
+                <span class="milestone-label">300</span>
+            </div>
+            <div class="milestone-item" data-points="500" aria-label="אבן דרך 500 נקודות" style="right: 33.33%;">
+                <span class="milestone-icon" aria-hidden="true">🏆</span>
+                <span class="milestone-label">500</span>
+            </div>
+            <div class="milestone-item" data-points="1000" aria-label="אבן דרך 1000 נקודות" style="right: 66.67%;">
+                <span class="milestone-icon" aria-hidden="true">👑</span>
+                <span class="milestone-label">1000</span>
+            </div>
+            <div class="milestone-item" data-points="1500" aria-label="אבן דרך 1500 נקודות" style="right: 100%;">
+                <span class="milestone-icon" aria-hidden="true">📚</span>
+                <span class="milestone-label">1500</span>
+            </div>
+        </nav>
+
+        <!-- Math Module cards -->
+        <!-- ACCESSIBILITY: section with heading for modules -->
+        <section aria-labelledby="math-section-heading">
+            <h2 class="section-header math-section" id="math-section-heading">
+                <span class="section-icon" aria-hidden="true">🔢</span>
+                <span>חשבון</span>
+            </h2>
+            <div class="modules-grid" id="math-modules-grid" role="list">
+                <!-- Filled dynamically -->
+            </div>
+        </section>
+
+        <!-- Language Module cards -->
+        <section aria-labelledby="language-section-heading">
+            <h2 class="section-header language-section" id="language-section-heading">
+                <span class="section-icon" aria-hidden="true">📚</span>
+                <span>שפה</span>
+            </h2>
+            <div class="modules-grid" id="language-modules-grid" role="list">
+                <!-- Filled dynamically -->
+            </div>
+        </section>
+
+        <!-- Stories Gallery Button -->
+        <div class="stories-btn-container">
+            <button class="btn btn-stories" onclick="App.showStoriesGallery()" aria-label="עבור לגלריית הסיפורים שלי">📖 הסיפורים שלי</button>
+        </div>
+
+        <!-- ACCESSIBILITY: Link to accessibility statement from dashboard -->
+        <nav class="dashboard-footer-nav" aria-label="ניווט תחתון">
+            <a href="accessibility-statement.html" class="a11y-footer-link">הצהרת נגישות</a>
+        </nav>
+    </div>
+
+    <!-- ==================== TUTORIAL SCREEN ==================== -->
+    <div id="screen-tutorial" class="screen" role="region" aria-label="מסך הדרכה">
+        <header class="exercise-header">
+            <button class="btn btn-back" onclick="App.goToDashboard()" aria-label="חזרה לדף הבית">🏠</button>
+            <h1 id="tutorial-title"></h1>
+            <div class="score-display score-small" aria-label="ניקוד">
+                <span class="score-icon" aria-hidden="true">⭐</span>
+                <span class="score-value" id="tutorial-score">0</span>
+            </div>
+        </header>
+        <div class="tutorial-container">
+            <div class="tutorial-mascot" aria-hidden="true">
+                <span class="mascot-big bounce">🦊</span>
+            </div>
+            <!-- ACCESSIBILITY: speech bubble is read by screen reader -->
+            <div class="speech-bubble" id="tutorial-speech" aria-live="polite">
+                בוא נלמד ביחד!
+            </div>
+            <div class="tutorial-content" id="tutorial-content" aria-live="polite">
+                <!-- Filled dynamically -->
+            </div>
+            <!-- ACCESSIBILITY: tutorial nav with aria-label on dots -->
+            <nav class="tutorial-nav" aria-label="ניווט הדרכה">
+                <button class="btn btn-secondary" id="tutorial-prev" onclick="App.tutorialPrev()" aria-label="שלב קודם">➡️ אחורה</button>
+                <div class="tutorial-dots" id="tutorial-dots" role="tablist" aria-label="שלבי הדרכה"></div>
+                <button class="btn btn-primary" id="tutorial-next" onclick="App.tutorialNext()" aria-label="שלב הבא">קדימה ⬅️</button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ==================== EXERCISE SCREEN ==================== -->
+    <div id="screen-exercise" class="screen" role="region" aria-label="מסך תרגילים">
+        <header class="exercise-header">
+            <button class="btn btn-back" onclick="App.confirmExit()" aria-label="יציאה מהתרגיל">🏠</button>
+            <h1 id="exercise-title"></h1>
+            <div class="score-display score-small" aria-label="ניקוד">
+                <span class="score-icon" aria-hidden="true">⭐</span>
+                <span class="score-value" id="exercise-score">0</span>
+            </div>
+        </header>
+
+        <!-- ACCESSIBILITY: Exercise progress with ARIA -->
+        <div class="exercise-progress" aria-label="התקדמות בתרגילים">
+            <span id="exercise-current">1</span> / <span id="exercise-total">10</span>
+            <div class="progress-container progress-small" role="progressbar"
+                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                 aria-label="התקדמות בתרגיל" id="exercise-progress-container">
+                <div class="progress-bar" id="exercise-progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- Exercise content area -->
+        <div class="exercise-content" id="exercise-content">
+            <!-- Question display -->
+            <div class="question-area" id="question-area" aria-live="polite">
+                <!-- Filled dynamically per module -->
+            </div>
+
+            <!-- Visual aid area -->
+            <!-- ACCESSIBILITY: visual aids are supplementary -->
+            <div class="visual-aid" id="visual-aid" aria-hidden="true">
+                <!-- Number lines, blocks, etc -->
+            </div>
+
+            <!-- Answer input area -->
+            <div class="answer-area" id="answer-area">
+                <!-- ACCESSIBILITY: label linked to input -->
+                <label for="answer-input" class="sr-only">הכנס תשובה</label>
+                <input type="number" id="answer-input" class="answer-input"
+                       inputmode="numeric" pattern="[0-9]*" autocomplete="off"
+                       placeholder="?"
+                       aria-label="שדה תשובה"
+                       onkeydown="if(event.key==='Enter')App.checkAnswer()">
+                <button class="btn btn-primary btn-check" onclick="App.checkAnswer()" aria-label="בדוק את התשובה">
+                    בדוק! ✓
+                </button>
+            </div>
+
+            <!-- Creative writing area -->
+            <div class="creative-area hidden" id="creative-area">
+                <label for="creative-text" class="sr-only">כתוב את הסיפור שלך</label>
+                <textarea id="creative-text" class="creative-textarea" dir="rtl"
+                          placeholder="כתוב את הסיפור שלך כאן..."
+                          aria-label="שדה כתיבה יצירתית"
+                          rows="5"></textarea>
+                <button class="btn btn-success btn-save-story" onclick="App.saveCreativeStory()" aria-label="שמור את הסיפור">
+                    📝 שמור לאמא!
+                </button>
+            </div>
+
+            <!-- Hint button -->
+            <div class="hint-area hidden" id="hint-area">
+                <button class="btn btn-hint" id="hint-btn" onclick="App.useHint()" aria-label="קבל רמז, עלות 5 נקודות">💡 רמז (-5 נקודות)</button>
+                <!-- ACCESSIBILITY: hint text announced via aria-live -->
+                <div class="hint-text hidden" id="hint-text" aria-live="polite"></div>
+            </div>
+
+            <!-- Multiple choice area (for some exercises) -->
+            <!-- ACCESSIBILITY: choices have role group with keyboard nav -->
+            <div class="choices-area hidden" id="choices-area" role="group" aria-label="אפשרויות תשובה">
+                <!-- Filled dynamically -->
+            </div>
+        </div>
+
+        <!-- ACCESSIBILITY: Feedback area with role=alert for announcements -->
+        <div class="feedback-area hidden" id="feedback-area" role="status" aria-live="assertive">
+            <div class="feedback-icon" id="feedback-icon" aria-hidden="true"></div>
+            <div class="feedback-message" id="feedback-message"></div>
+            <div class="feedback-explanation" id="feedback-explanation"></div>
+            <button class="btn btn-primary" id="feedback-next-btn" onclick="App.nextExercise()">
+                ⬅️ !הבא
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== QUIZ SCREEN ==================== -->
+    <div id="screen-quiz" class="screen" role="region" aria-label="מסך מבחן">
+        <header class="exercise-header">
+            <button class="btn btn-back" onclick="App.confirmExit()" aria-label="יציאה מהמבחן">🏠</button>
+            <h1 id="quiz-title">מבחן סיכום 📝</h1>
+            <div class="score-display score-small" aria-label="ניקוד">
+                <span class="score-icon" aria-hidden="true">⭐</span>
+                <span class="score-value" id="quiz-score">0</span>
+            </div>
+        </header>
+        <div class="exercise-progress" aria-label="התקדמות במבחן">
+            <span id="quiz-current">1</span> / <span id="quiz-total">10</span>
+            <div class="progress-container progress-small" role="progressbar"
+                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                 aria-label="התקדמות במבחן" id="quiz-progress-container">
+                <div class="progress-bar" id="quiz-progress-bar"></div>
+            </div>
+        </div>
+        <div class="exercise-content" id="quiz-content">
+            <div class="question-area" id="quiz-question-area" aria-live="polite"></div>
+            <div class="visual-aid" id="quiz-visual-aid" aria-hidden="true"></div>
+            <div class="answer-area" id="quiz-answer-area">
+                <label for="quiz-answer-input" class="sr-only">הכנס תשובה למבחן</label>
+                <input type="number" id="quiz-answer-input" class="answer-input"
+                       inputmode="numeric" pattern="[0-9]*" autocomplete="off"
+                       placeholder="?"
+                       aria-label="שדה תשובה למבחן"
+                       onkeydown="if(event.key==='Enter')App.checkQuizAnswer()">
+                <button class="btn btn-primary btn-check" onclick="App.checkQuizAnswer()" aria-label="בדוק את התשובה">
+                    בדוק! ✓
+                </button>
+            </div>
+            <div class="choices-area hidden" id="quiz-choices-area" role="group" aria-label="אפשרויות תשובה למבחן"></div>
+            <!-- Quiz Hint -->
+            <div class="hint-area hidden" id="quiz-hint-area">
+                <button class="btn btn-hint" id="quiz-hint-btn" onclick="App.useHint()" aria-label="קבל רמז, עלות 5 נקודות">💡 רמז (-5 נקודות)</button>
+                <div class="hint-text hidden" id="quiz-hint-text" aria-live="polite"></div>
+            </div>
+        </div>
+        <!-- ACCESSIBILITY: Quiz feedback with role=status -->
+        <div class="feedback-area hidden" id="quiz-feedback-area" role="status" aria-live="assertive">
+            <div class="feedback-icon" id="quiz-feedback-icon" aria-hidden="true"></div>
+            <div class="feedback-message" id="quiz-feedback-message"></div>
+            <div class="feedback-explanation" id="quiz-feedback-explanation"></div>
+            <button class="btn btn-primary" id="quiz-feedback-next-btn" onclick="App.nextQuizQuestion()">
+                ⬅️ !הבא
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== QUIZ RESULTS SCREEN ==================== -->
+    <div id="screen-quiz-results" class="screen" role="region" aria-label="תוצאות המבחן">
+        <div class="results-container">
+            <!-- ACCESSIBILITY: decorative mascot -->
+            <div class="results-mascot bounce" aria-hidden="true">🦊</div>
+            <h1 id="results-title">סיימת את המבחן!</h1>
+            <div class="results-score" aria-label="תוצאת המבחן">
+                <div class="results-correct" id="results-correct">8/10</div>
+                <div class="results-label">תשובות נכונות</div>
+            </div>
+            <!-- ACCESSIBILITY: decorative stars -->
+            <div class="results-stars" id="results-stars" aria-label="דירוג כוכבים">⭐⭐⭐</div>
+            <div class="results-points" id="results-points" aria-live="polite">+80 נקודות!</div>
+            <div class="results-message" id="results-message"></div>
+            <button class="btn btn-primary btn-xl" onclick="App.leaveResults()" aria-label="חזרה ללוח הראשי">
+                חזרה הביתה 🏠
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== CELEBRATION SCREEN ==================== -->
+    <div id="screen-celebration" class="screen" role="alertdialog" aria-label="חגיגה" aria-modal="false">
+        <div class="celebration-container">
+            <!-- ACCESSIBILITY: decorative emoji -->
+            <div class="celebration-emoji" id="celebration-emoji" aria-hidden="true">🏆</div>
+            <h1 class="celebration-title" id="celebration-title"></h1>
+            <p class="celebration-subtitle" id="celebration-subtitle"></p>
+            <div class="celebration-points" id="celebration-points" aria-live="polite"></div>
+            <div class="celebration-message hidden" id="celebration-gift-message">
+                <p class="gift-text" id="celebration-congrats">כל הכבוד! 🎉</p>
+                <p class="gift-text" id="gift-points-text"></p>
+                <p class="gift-text" id="celebration-show-mom">תראו לאמא את המסך הזה - מגיע לכם מתנה!</p>
+            </div>
+            <button class="btn btn-primary btn-xl pulse" onclick="App.dismissCelebration()" aria-label="המשך">
+                יאללה, נמשיך! 🚀
+            </button>
+            <button class="btn btn-gift hidden" id="show-mom-btn" onclick="App.showParentLogin()" aria-label="הצג לאמא">
+                🎁 תראה לאמא! 🎁
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== PARENT SUMMARY SCREEN ==================== -->
+    <div id="screen-parent" class="screen" role="region" aria-label="דוח התקדמות הורים">
+        <div class="parent-container">
+            <header class="parent-header">
+                <h1 id="parent-report-title">📊 דוח התקדמות</h1>
+                <button class="btn btn-secondary" onclick="App.goToDashboard()" aria-label="סגור דוח וחזור ללוח">✕ סגור</button>
+            </header>
+            <div class="parent-grid">
+                <div class="parent-card">
+                    <h2>⭐ ניקוד כולל</h2>
+                    <div class="parent-stat" id="parent-total-score">0</div>
+                </div>
+                <div class="parent-card">
+                    <h2>📚 מודולים שהושלמו</h2>
+                    <div class="parent-stat" id="parent-modules-done">0 / 11</div>
+                </div>
+                <div class="parent-card">
+                    <h2>⏱️ זמן למידה</h2>
+                    <div class="parent-stat" id="parent-time">0 דקות</div>
+                </div>
+                <div class="parent-card">
+                    <h2>📈 ממוצע הצלחה</h2>
+                    <div class="parent-stat" id="parent-accuracy">0%</div>
+                </div>
+            </div>
+            <section class="parent-details" aria-labelledby="math-details-heading">
+                <h2 id="math-details-heading">🔢 חשבון - פירוט</h2>
+                <div id="parent-math-details"></div>
+            </section>
+            <section class="parent-details" aria-labelledby="lang-details-heading">
+                <h2 id="lang-details-heading">📚 שפה - פירוט</h2>
+                <div id="parent-language-details"></div>
+            </section>
+            <section class="parent-details" aria-labelledby="strengths-heading">
+                <h2 id="strengths-heading">💪 חוזקות</h2>
+                <p id="parent-strengths"></p>
+            </section>
+            <section class="parent-details" aria-labelledby="improvements-heading">
+                <h2 id="improvements-heading">📝 תחומים לשיפור</h2>
+                <p id="parent-improvements"></p>
+            </section>
+            <section class="parent-details" aria-labelledby="recommendations-heading">
+                <h2 id="recommendations-heading">🎯 המלצות</h2>
+                <p id="parent-recommendations"></p>
+            </section>
+            <div class="parent-actions">
+                <button class="btn btn-danger" onclick="App.confirmReset()" aria-label="איפוס כל ההתקדמות">🔄 איפוס התקדמות</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== STORIES GALLERY SCREEN ==================== -->
+    <div id="screen-stories" class="screen" role="region" aria-label="גלריית סיפורים">
+        <header class="exercise-header">
+            <button class="btn btn-back" onclick="App.goToDashboard()" aria-label="חזרה לדף הבית">🏠</button>
+            <h1>📖 הסיפורים שלי</h1>
+            <div></div>
+        </header>
+        <div class="stories-gallery" id="stories-gallery">
+            <p class="empty-gallery hidden" id="empty-gallery">עדיין לא כתבת סיפורים. בוא נתחיל! ✍️</p>
+            <!-- Filled dynamically -->
+        </div>
+    </div>
+
+    </main><!-- /main-content -->
+
+    <!-- ==================== CHANGE NAME DIALOG ==================== -->
+    <div id="change-name-dialog" class="dialog-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="change-name-title">
+        <div class="dialog-box dialog-box-wide">
+            <h2 id="change-name-title">✏️ שינוי שם</h2>
+            <form onsubmit="event.preventDefault(); App.confirmChangeName();">
+                <label for="change-name-input" class="register-label">השם החדש שלך:</label>
+                <input type="text" id="change-name-input" class="register-input" placeholder="הכניסו שם..." maxlength="20"
+                       aria-required="true">
+                <div class="dialog-buttons">
+                    <button type="submit" class="btn btn-primary" id="change-name-save">שמור ✓</button>
+                    <button type="button" class="btn btn-secondary" onclick="App.hideChangeName()">ביטול</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== CONFIRM DIALOG ==================== -->
+    <!-- ACCESSIBILITY: Dialog with proper role and aria-modal -->
+    <div id="confirm-dialog" class="dialog-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-message">
+        <div class="dialog-box">
+            <p id="confirm-message"></p>
+            <div class="dialog-buttons">
+                <button class="btn btn-primary" id="confirm-yes">כן</button>
+                <button class="btn btn-secondary" id="confirm-no">לא</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="site-disclaimer" style="text-align:center; font-size:14px; color:#888; direction:rtl; padding:16px 8px 8px; margin-top:24px;">
+        אתר זה נבנה בסיוע בינה מלאכותית. התוכן עשוי להכיל טעויות — מומלץ ללמוד בליווי הורה או מורה.
+    </div>
+
+    <script src="modules.js?v=6"></script>
+    <script src="hebrew_modules.js?v=6"></script>
+    <script src="app.js?v=6"></script>
+</body>
+</html>

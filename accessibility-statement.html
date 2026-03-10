@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הצהרת נגישות - חשבונאי</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .a11y-statement {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            font-family: var(--font-main);
+            color: var(--text);
+            line-height: 1.8;
+        }
+        .a11y-statement h1 {
+            font-size: 2rem;
+            color: var(--blue-dark);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .a11y-statement h2 {
+            font-size: 1.3rem;
+            color: var(--blue);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 2px solid var(--blue-light);
+            padding-bottom: 0.3rem;
+        }
+        .a11y-statement p,
+        .a11y-statement li {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .a11y-statement ul {
+            padding-right: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .a11y-statement a {
+            color: var(--blue-dark);
+            text-decoration: underline;
+        }
+        .a11y-statement .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--blue);
+            color: #fff;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .a11y-statement .back-link:hover {
+            background: var(--blue-dark);
+        }
+        .a11y-statement .update-date {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">דלג לתוכן הראשי</a>
+
+    <main id="main-content" class="a11y-statement" role="main">
+        <h1>♿ הצהרת נגישות</h1>
+
+        <h2>אודות האתר</h2>
+        <p>
+            <strong>חשבונאי</strong> הוא אתר חינוכי אינטראקטיבי ללימוד חשבון ולשון עברית לילדים.
+            האתר נועד לשמש ככלי למידה עצמאי בסביבה מהנה ומעודדת.
+        </p>
+
+        <h2>מחויבות לנגישות</h2>
+        <p>
+            אנו פועלים להנגיש את אתר חשבונאי לכלל האוכלוסייה, לרבות אנשים עם מוגבלויות,
+            בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות),
+            התשע"ג-2013, ובהתאם לתקן הישראלי ת.י. 5568 המבוסס על הנחיות WCAG 2.0 ברמה AA.
+        </p>
+
+        <h2>רמת הנגישות</h2>
+        <p>
+            אתר זה עומד בדרישות תקן ת.י. 5568 ברמת AA של הנחיות WCAG 2.0, ככל שהדבר מתאפשר
+            מבחינה טכנולוגית ועסקית.
+        </p>
+
+        <h2>התאמות נגישות שבוצעו</h2>
+        <ul>
+            <li><strong>ניווט מקלדת:</strong> ניתן לנווט בכל האתר באמצעות מקלדת בלבד (Tab, Enter, חצים, Escape).</li>
+            <li><strong>דילוג לתוכן:</strong> קישור "דלג לתוכן הראשי" מופיע בלחיצת Tab ראשונה.</li>
+            <li><strong>קורא מסך:</strong> האתר תומך בקוראי מסך (NVDA, JAWS, VoiceOver) עם תגיות ARIA מתאימות.</li>
+            <li><strong>מבנה כותרות:</strong> היררכיית כותרות תקינה (H1-H3) בכל מסך.</li>
+            <li><strong>טפסים:</strong> כל שדה טופס מקושר לתווית (label) מתאימה.</li>
+            <li><strong>שפה:</strong> שפת העמוד מוגדרת כעברית (lang="he") עם כיוון RTL.</li>
+            <li><strong>ניגודיות צבעים:</strong> יחס ניגודיות מינימלי 4.5:1 לטקסט רגיל ו-3:1 לטקסט גדול.</li>
+            <li><strong>הגדלת טקסט:</strong> ניתן להגדיל טקסט עד 200% ללא אובדן מידע.</li>
+            <li><strong>הפסקת אנימציות:</strong> ניתן לעצור את כל האנימציות באמצעות כפתור ייעודי.</li>
+            <li><strong>ניגודיות גבוהה:</strong> מצב ניגודיות גבוהה זמין לשיפור קריאות.</li>
+            <li><strong>הדגשת פוקוס:</strong> מצב הדגשת פוקוס מוגברת לניווט מקלדת.</li>
+            <li><strong>הקראת עמוד:</strong> תמיכה בהקראת תוכן העמוד בעברית.</li>
+            <li><strong>התאמה למובייל:</strong> עיצוב רספונסיבי מותאם לכל גודל מסך.</li>
+            <li><strong>אלמנטים דקורטיביים:</strong> הוסתרו מקוראי מסך באמצעות aria-hidden.</li>
+            <li><strong>הודעות חיות:</strong> עדכוני ניקוד ומשוב מוכרזים באמצעות aria-live.</li>
+            <li><strong>דיאלוגים:</strong> חלונות אישור עם לכידת פוקוס ותמיכה ב-Escape.</li>
+        </ul>
+
+        <h2>תפריט נגישות</h2>
+        <p>
+            באתר מוטמע תפריט נגישות הניתן לפתיחה באמצעות לחיצה על כפתור ♿ בפינה הימנית התחתונה.
+            התפריט מאפשר:
+        </p>
+        <ul>
+            <li>שינוי גודל טקסט (קטן, בינוני, גדול)</li>
+            <li>הפעלת מצב ניגודיות גבוהה</li>
+            <li>הפסקת אנימציות</li>
+            <li>הדגשת פוקוס מוגברת</li>
+            <li>הקראת תוכן העמוד בקול</li>
+            <li>איפוס כל ההגדרות</li>
+        </ul>
+
+        <h2>טכנולוגיות</h2>
+        <p>
+            האתר בנוי ב-HTML5, CSS3 ו-JavaScript ותומך בדפדפנים: Chrome, Firefox, Safari, Edge בגרסאותיהם העדכניות.
+        </p>
+
+        <h2>בעיות נגישות ידועות</h2>
+        <p>
+            למרות מאמצינו להנגשה מלאה, ייתכנו אזורים שטרם הונגשו באופן מלא.
+            אנו ממשיכים לעבוד על שיפור הנגישות בהתמדה.
+        </p>
+
+        <h2>יצירת קשר בנושא נגישות</h2>
+        <p>
+            אם נתקלתם בבעיית נגישות באתר, אנא פנו אלינו ונשמח לסייע:
+        </p>
+        <ul>
+            <li><strong>דוא"ל:</strong> accessibility@hashbonai.co.il</li>
+            <li><strong>טלפון:</strong> *5568</li>
+        </ul>
+        <p>
+            אנו מתחייבים להגיב לפניות נגישות בתוך 5 ימי עסקים.
+        </p>
+
+        <p class="update-date">
+            הצהרת נגישות זו עודכנה לאחרונה בתאריך: מרץ 2026
+        </p>
+
+        <div style="text-align: center;">
+            <a href="index.html" class="back-link">🏠 חזרה לאתר</a>
+        </div>
+    </main>
+</body>
+</html>
