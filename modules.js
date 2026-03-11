@@ -143,7 +143,7 @@ function createShapeSVG(shape, size) {
     size = size || 150;
     const colors = ['#4A90D9', '#6BCB77', '#FF8C42', '#9B72CF', '#FF6B9D'];
     const color = colors[Math.floor(Math.random() * colors.length)];
-    const shapeNames = { triangle: 'משולש', square: 'ריבוע', rectangle: 'מלבן', circle: 'עיגול', pentagon: 'מחומש', hexagon: 'משושה' };
+    const shapeNames = { triangle: 'משולש', square: 'ריבוע', rectangle: 'מלבן', circle: 'עיגול', pentagon: 'מחומש', hexagon: 'משושה', trapezoid: 'טרפז', rhombus: 'מעוין', oval: 'אליפסה', star: 'כוכב' };
     let svg = `<svg class="shape-svg" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="צורה: ${shapeNames[shape] || shape}">`;
     const cx = size / 2, cy = size / 2;
     const s = size * 0.35;
@@ -176,6 +176,24 @@ function createShapeSVG(shape, size) {
                 pts6.push(`${cx + s * Math.cos(a)},${cy + s * Math.sin(a)}`);
             }
             svg += `<polygon points="${pts6.join(' ')}" fill="${color}" opacity="0.3" stroke="${color}" stroke-width="3"/>`;
+            break;
+        case 'trapezoid':
+            svg += `<polygon points="${cx - s * 0.6},${cy - s * 0.7} ${cx + s * 0.6},${cy - s * 0.7} ${cx + s},${cy + s * 0.7} ${cx - s},${cy + s * 0.7}" fill="${color}" opacity="0.3" stroke="${color}" stroke-width="3"/>`;
+            break;
+        case 'rhombus':
+            svg += `<polygon points="${cx},${cy - s} ${cx + s * 0.7},${cy} ${cx},${cy + s} ${cx - s * 0.7},${cy}" fill="${color}" opacity="0.3" stroke="${color}" stroke-width="3"/>`;
+            break;
+        case 'oval':
+            svg += `<ellipse cx="${cx}" cy="${cy}" rx="${s * 1.3}" ry="${s * 0.8}" fill="${color}" opacity="0.3" stroke="${color}" stroke-width="3"/>`;
+            break;
+        case 'star':
+            const starPts = [];
+            for (let i = 0; i < 10; i++) {
+                const a = (i * 36 - 90) * Math.PI / 180;
+                const r = i % 2 === 0 ? s : s * 0.45;
+                starPts.push(`${cx + r * Math.cos(a)},${cy + r * Math.sin(a)}`);
+            }
+            svg += `<polygon points="${starPts.join(' ')}" fill="${color}" opacity="0.3" stroke="${color}" stroke-width="3"/>`;
             break;
     }
 
@@ -720,14 +738,26 @@ const MODULES = [
                 `
             },
             {
+                speech: 'יש עוד צורות מעניינות!',
+                content: `
+                    <div class="tutorial-step">
+                        <p>◇ <span class="tutorial-highlight">מעוין</span> - 4 צלעות שוות, כמו יהלום</p>
+                        <p>⏢ <span class="tutorial-highlight">טרפז</span> - 4 צלעות, 2 מקבילות</p>
+                        <p>⬮ <span class="tutorial-highlight">אליפסה</span> - כמו עיגול מתוח, בלי צלעות!</p>
+                        <p>⭐ <span class="tutorial-highlight">כוכב</span> - יש לו 5 חודים!</p>
+                    </div>
+                `
+            },
+            {
                 speech: 'עכשיו תורך! 🌟',
                 content: `
                     <div class="tutorial-step">
                         <p>בוא נתרגל לזהות צורות!</p>
                         <p>נשאל אותך שאלות על:</p>
                         <p>✅ זיהוי צורות</p>
-                        <p>✅ ספירת צלעות</p>
-                        <p>✅ ספירת פינות</p>
+                        <p>✅ ספירת צלעות ופינות</p>
+                        <p>✅ השוואת צורות</p>
+                        <p>✅ מציאת הצורה השונה</p>
                         <p style="margin-top:1rem;">מוכנים? 🚀</p>
                     </div>
                 `
@@ -740,52 +770,195 @@ const MODULES = [
             rectangle: { name: 'מלבן', sides: 4, corners: 4 },
             circle:    { name: 'עיגול', sides: 0, corners: 0 },
             pentagon:  { name: 'מחומש', sides: 5, corners: 5 },
-            hexagon:   { name: 'משושה', sides: 6, corners: 6 }
+            hexagon:   { name: 'משושה', sides: 6, corners: 6 },
+            trapezoid: { name: 'טרפז', sides: 4, corners: 4 },
+            rhombus:   { name: 'מעוין', sides: 4, corners: 4 },
+            oval:      { name: 'אליפסה', sides: 0, corners: 0 },
+            star:      { name: 'כוכב', sides: 10, corners: 5, points: 5 }
+        },
+
+        // Shape pools by difficulty
+        _easyShapes: ['triangle', 'square', 'rectangle', 'circle'],
+        _mediumShapes: ['triangle', 'square', 'rectangle', 'circle', 'pentagon', 'hexagon', 'trapezoid', 'rhombus', 'oval'],
+        _hardShapes: ['triangle', 'square', 'rectangle', 'circle', 'pentagon', 'hexagon', 'trapezoid', 'rhombus', 'oval', 'star'],
+
+        // --- Question generators ---
+
+        _genIdentify(pool) {
+            const shapeKey = pool[randInt(0, pool.length - 1)];
+            const shape = this._shapeData[shapeKey];
+            const otherNames = Object.values(this._shapeData).map(s => s.name).filter(n => n !== shape.name);
+            const choices = shuffle([shape.name, ...shuffle(otherNames).slice(0, 3)]);
+            return {
+                type: 'choice',
+                question: 'מה שם הצורה הזאת?',
+                displayHTML: '<div class="question-text">מה שם הצורה הזאת?</div>',
+                answer: shape.name,
+                choices: choices,
+                hint: `💡 ספור את הצלעות: ${shape.sides === 0 ? 'אין צלעות — זה עגול!' : `יש ${shape.sides} צלעות`}`,
+                visualAid: `<div class="shape-display">${createShapeSVG(shapeKey, 180)}</div>`,
+                explain: () => `זו צורה בשם ${shape.name}. ${shape.sides > 0 ? `יש לה ${shape.sides} צלעות ו-${shape.corners} פינות.` : 'אין לה צלעות ואין לה פינות!'}`
+            };
+        },
+
+        _genCountSides(pool) {
+            const shapeKey = pool[randInt(0, pool.length - 1)];
+            const shape = this._shapeData[shapeKey];
+            return {
+                type: 'input',
+                question: `כמה צלעות יש ל${shape.name}?`,
+                displayHTML: `<div class="question-text">כמה צלעות יש ל${shape.name}?</div>`,
+                answer: shape.sides,
+                hint: '💡 צלע = קו ישר. ספור את הקווים בצורה',
+                visualAid: `<div class="shape-display">${createShapeSVG(shapeKey, 180)}</div>`,
+                explain: () => `ל${shape.name} יש ${shape.sides} צלעות. ${shape.sides === 0 ? 'אין קווים ישרים!' : `ספור את הקווים - יש ${shape.sides}!`}`
+            };
+        },
+
+        _genCountCorners(pool) {
+            const shapeKey = pool[randInt(0, pool.length - 1)];
+            const shape = this._shapeData[shapeKey];
+            return {
+                type: 'input',
+                question: `כמה פינות יש ל${shape.name}?`,
+                displayHTML: `<div class="question-text">כמה פינות יש ל${shape.name}?</div>`,
+                answer: shape.corners,
+                hint: '💡 פינה = מקום שבו שני קווים נפגשים. ספור את הנקודות!',
+                visualAid: `<div class="shape-display">${createShapeSVG(shapeKey, 180)}</div>`,
+                explain: () => `ל${shape.name} יש ${shape.corners} פינות. ${shape.corners === 0 ? 'אין פינות כי אין קווים ישרים!' : `פינה היא המקום שבו שני קווים נפגשים.`}`
+            };
+        },
+
+        _genSidesCompare(pool) {
+            let key1, key2, s1, s2;
+            let attempts = 0;
+            do {
+                key1 = pool[randInt(0, pool.length - 1)];
+                key2 = pool[randInt(0, pool.length - 1)];
+                s1 = this._shapeData[key1];
+                s2 = this._shapeData[key2];
+                attempts++;
+            } while (s1.sides === s2.sides && attempts < 20);
+            if (s1.sides === s2.sides) return this._genIdentify(pool);
+
+            const answer = s1.sides > s2.sides ? s1.name : s2.name;
+            return {
+                type: 'choice',
+                question: 'לאיזו צורה יש יותר צלעות?',
+                displayHTML: '<div class="question-text">לאיזו צורה יש יותר צלעות?</div>',
+                answer: answer,
+                choices: shuffle([s1.name, s2.name]),
+                hint: '💡 ספור את הצלעות של כל צורה!',
+                visualAid: `<div class="shape-display" style="display:flex;gap:2rem;justify-content:center;">
+                    <div style="text-align:center;">${createShapeSVG(key1, 140)}<div>${s1.name}</div></div>
+                    <div style="text-align:center;">${createShapeSVG(key2, 140)}<div>${s2.name}</div></div>
+                </div>`,
+                explain: () => `ל${s1.name} יש ${s1.sides} צלעות ול${s2.name} יש ${s2.sides} צלעות. ${answer} היא התשובה!`
+            };
+        },
+
+        _genShapeByProperty(pool) {
+            const shapeKey = pool[randInt(0, pool.length - 1)];
+            const shape = this._shapeData[shapeKey];
+            const targetSides = shape.sides;
+
+            const questionText = targetSides === 0
+                ? 'לאיזו צורה אין צלעות בכלל?'
+                : `לאיזו צורה יש בדיוק ${targetSides} צלעות?`;
+
+            // Wrong choices: shapes with DIFFERENT side count
+            const wrongNames = Object.values(this._shapeData)
+                .filter(s => s.sides !== targetSides)
+                .map(s => s.name);
+            const choices = shuffle([shape.name, ...shuffle(wrongNames).slice(0, 3)]);
+
+            return {
+                type: 'choice',
+                question: questionText,
+                displayHTML: `<div class="question-text">${questionText}</div>`,
+                answer: shape.name,
+                choices: choices,
+                hint: targetSides === 0
+                    ? '💡 חשוב: איזו צורה עגולה ואין לה קווים ישרים?'
+                    : '💡 שם הצורה לפעמים רומז על מספר הצלעות!',
+                visualAid: '',
+                explain: () => `ל${shape.name} יש ${targetSides === 0 ? 'אפס' : targetSides} צלעות!`
+            };
+        },
+
+        _genOddOneOut(pool) {
+            const strategies = [
+                { match: s => s.corners > 0, mismatch: s => s.corners === 0, reason: 'אין לה פינות, בעוד לאחרות יש' },
+                { match: s => s.sides === 4, mismatch: s => s.sides !== 4 && s.sides > 0, reason: 'אין לה 4 צלעות כמו לאחרות' },
+                { match: s => s.sides > 0, mismatch: s => s.sides === 0, reason: 'אין לה צלעות כמו לאחרות' }
+            ];
+            const strat = strategies[randInt(0, strategies.length - 1)];
+
+            const allEntries = Object.entries(this._shapeData).filter(([k]) => pool.includes(k));
+            const matching = allEntries.filter(([, s]) => strat.match(s));
+            const different = allEntries.filter(([, s]) => strat.mismatch(s));
+
+            if (matching.length < 3 || different.length < 1) return this._genIdentify(pool);
+
+            const picked3 = shuffle(matching).slice(0, 3);
+            const oddOne = shuffle(different)[0];
+            const allFour = shuffle([...picked3, oddOne]);
+
+            return {
+                type: 'choice',
+                question: 'איזו צורה שונה מהאחרות?',
+                displayHTML: '<div class="question-text">איזו צורה שונה מהאחרות?</div>',
+                answer: oddOne[1].name,
+                choices: allFour.map(([, s]) => s.name),
+                hint: '💡 חפש מה משותף לשלוש צורות, ומה שונה באחת!',
+                visualAid: `<div class="shape-display" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+                    ${allFour.map(([k, s]) => `<div style="text-align:center;">${createShapeSVG(k, 120)}<div>${s.name}</div></div>`).join('')}
+                </div>`,
+                explain: () => `${oddOne[1].name} שונה כי ${strat.reason}!`
+            };
+        },
+
+        _genCountStarPoints() {
+            return {
+                type: 'input',
+                question: 'כמה חודים (קצוות בולטים) יש לכוכב?',
+                displayHTML: '<div class="question-text">כמה חודים יש לכוכב?</div>',
+                answer: 5,
+                hint: '💡 ספור את הקצוות החדים של הכוכב!',
+                visualAid: `<div class="shape-display">${createShapeSVG('star', 180)}</div>`,
+                explain: () => 'לכוכב יש 5 חודים! ספור את הקצוות שבולטים החוצה.'
+            };
         },
 
         generateExercise(difficulty) {
-            const shapes = Object.keys(this._shapeData);
-            const questionTypes = ['identify', 'sides', 'corners'];
-            const qType = questionTypes[difficulty % 3];
-            const shapeKey = shapes[randInt(0, shapes.length - 1)];
-            const shape = this._shapeData[shapeKey];
+            let qType, pool;
 
-            if (qType === 'identify') {
-                // Show shape, ask name (multiple choice)
-                const correctName = shape.name;
-                const otherNames = Object.values(this._shapeData).map(s => s.name).filter(n => n !== correctName);
-                const choices = shuffle([correctName, ...shuffle(otherNames).slice(0, 3)]);
-
-                return {
-                    type: 'choice',
-                    question: `מה שם הצורה הזאת?`,
-                    displayHTML: `<div class="question-text">מה שם הצורה הזאת?</div>`,
-                    answer: correctName,
-                    choices: choices,
-                    hint: `💡 ספור את הצלעות: ${shape.sides === 0 ? 'אין צלעות — זה עגול!' : `יש ${shape.sides} צלעות`}`,
-                    visualAid: `<div class="shape-display">${createShapeSVG(shapeKey, 180)}</div>`,
-                    explain: () => `זו צורה בשם ${correctName}. ${shape.sides > 0 ? `יש לה ${shape.sides} צלעות ו-${shape.corners} פינות.` : 'אין לה צלעות ואין לה פינות!'}`
-                };
-            } else if (qType === 'sides') {
-                return {
-                    type: 'input',
-                    question: `כמה צלעות יש ל${shape.name}?`,
-                    displayHTML: `<div class="question-text">כמה צלעות יש ל${shape.name}?</div>`,
-                    answer: shape.sides,
-                    hint: `💡 צלע = קו ישר. ספור את הקווים בצורה`,
-                    visualAid: `<div class="shape-display">${createShapeSVG(shapeKey, 180)}</div>`,
-                    explain: () => `ל${shape.name} יש ${shape.sides} צלעות. ${shape.sides === 0 ? 'עיגול הוא עגול ואין לו צלעות!' : `ספור את הקווים - יש ${shape.sides}!`}`
-                };
+            if (difficulty < 3) {
+                // EASY: basic shapes, basic questions
+                const types = ['identify', 'count_sides', 'count_corners'];
+                qType = types[difficulty % types.length];
+                pool = this._easyShapes;
+            } else if (difficulty < 7) {
+                // MEDIUM: all shapes + comparison/property questions
+                const types = ['identify', 'sides_compare', 'shape_by_property', 'count_sides'];
+                qType = types[(difficulty - 3) % types.length];
+                pool = this._mediumShapes;
             } else {
-                return {
-                    type: 'input',
-                    question: `כמה פינות (קודקודים) יש ל${shape.name}?`,
-                    displayHTML: `<div class="question-text">כמה פינות יש ל${shape.name}?</div>`,
-                    answer: shape.corners,
-                    hint: `💡 פינה = מקום שבו שני קווים נפגשים. ספור את הנקודות!`,
-                    visualAid: `<div class="shape-display">${createShapeSVG(shapeKey, 180)}</div>`,
-                    explain: () => `ל${shape.name} יש ${shape.corners} פינות. ${shape.corners === 0 ? 'עיגול הוא עגול ואין לו פינות!' : `פינה היא המקום שבו שני קווים נפגשים. ל${shape.name} יש ${shape.corners}!`}`
-                };
+                // HARD: all shapes + odd-one-out + star
+                const types = ['odd_one_out', 'count_star_points', 'shape_by_property'];
+                qType = types[(difficulty - 7) % types.length];
+                pool = this._hardShapes;
+            }
+
+            switch (qType) {
+                case 'identify': return this._genIdentify(pool);
+                case 'count_sides': return this._genCountSides(pool);
+                case 'count_corners': return this._genCountCorners(pool);
+                case 'sides_compare': return this._genSidesCompare(pool);
+                case 'shape_by_property': return this._genShapeByProperty(pool);
+                case 'odd_one_out': return this._genOddOneOut(pool);
+                case 'count_star_points': return this._genCountStarPoints();
+                default: return this._genIdentify(pool);
             }
         }
     },
