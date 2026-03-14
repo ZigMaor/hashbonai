@@ -137,6 +137,14 @@ function createClockSVG(hours, minutes) {
 }
 
 // ==========================================
+// Helper: create digital clock display HTML
+// ==========================================
+function createDigitalClockHTML(hours, minutes) {
+    const pad = (n) => n.toString().padStart(2, '0');
+    return `<div style="display:inline-flex;align-items:center;justify-content:center;background:#1a1a2e;color:#4ade80;font-family:'Courier New',monospace;font-size:2rem;font-weight:bold;padding:0.4rem 1rem;border-radius:10px;border:2px solid #333;direction:ltr;letter-spacing:2px;">${hours}:${pad(minutes)}</div>`;
+}
+
+// ==========================================
 // Helper: create shape SVG
 // ==========================================
 function createShapeSVG(shape, size) {
@@ -456,101 +464,319 @@ const MODULES = [
         }
     },
 
-    // ============ MODULE 3: Basic Multiplication (1-5) ============
+    // ============ MODULE 3: כפל — Multiplication ============
     {
         id: 'multiplication',
-        name: 'כפל בסיסי',
+        name: 'כפל',
         icon: '✖️',
-        description: 'לוח הכפל 1 עד 5!',
+        description: 'כפל בעזרת קבוצות שוות, ישר מספרים ומלבן!',
         exerciseCount: 10,
         quizCount: 10,
 
         tutorial: [
             {
-                speech: 'בוא נלמד כפל! 🤩\nכפל זה חיבור מהיר!',
+                speech: 'בוא נלמד כפל! 🤩\nכפל זה חיבור חוזר של קבוצות שוות!',
                 content: `
                     <div class="tutorial-step">
-                        <p>כפל אומר: <span class="tutorial-highlight">כמה ביחד כשיש קבוצות שוות?</span></p>
-                        <div class="tutorial-equation">3 × 2 = ?</div>
-                        <p>זה אומר: <span class="tutorial-highlight">3 קבוצות של 2</span></p>
-                        <p>🍭🍭 + 🍭🍭 + 🍭🍭</p>
+                        <p><span class="tutorial-highlight">כפל = קבוצות שוות</span></p>
+                        <p>3 × 4 אומר: <span class="tutorial-highlight">3 קבוצות של 4</span></p>
+                        <p>🍭🍭🍭🍭 | 🍭🍭🍭🍭 | 🍭🍭🍭🍭</p>
+                        <p>זה כמו <span class="tutorial-highlight">חיבור חוזר</span>:</p>
+                        <div class="tutorial-equation">3 × 4 = 4 + 4 + 4 = 12</div>
                     </div>
                 `
             },
             {
-                speech: 'נספור את כל הסוכריות!',
+                speech: 'אפשר לפתור כפל גם בספירה בקפיצות שוות!',
                 content: `
                     <div class="tutorial-step">
-                        <p>3 קבוצות של 2 סוכריות:</p>
-                        <p>🍭🍭 | 🍭🍭 | 🍭🍭</p>
-                        <p>סך הכל: 2 + 2 + 2 = <span class="tutorial-highlight">6!</span></p>
-                        <div class="tutorial-equation">3 × 2 = 6</div>
+                        <p><span class="tutorial-highlight">ספירה בקפיצות שוות</span></p>
+                        <p>3 × 5 = ?</p>
+                        <p>נקפוץ 3 קפיצות של 5:</p>
+                        <p>5 ← 10 ← <span class="tutorial-highlight">15</span></p>
+                        <div class="tutorial-equation">3 × 5 = 15</div>
                     </div>
                 `
             },
             {
-                speech: 'עוד דוגמה!',
+                speech: 'גם ישר המספרים עוזר לנו!',
                 content: `
                     <div class="tutorial-step">
-                        <div class="tutorial-equation">4 × 5 = ?</div>
-                        <p>4 קבוצות של 5:</p>
-                        <p>⭐⭐⭐⭐⭐</p>
-                        <p>⭐⭐⭐⭐⭐</p>
-                        <p>⭐⭐⭐⭐⭐</p>
-                        <p>⭐⭐⭐⭐⭐</p>
-                        <p>סך הכל: <span class="tutorial-highlight">20!</span></p>
+                        <p><span class="tutorial-highlight">כפל בעזרת ישר המספרים</span></p>
+                        <p>4 × 3 = ?</p>
+                        <p>נעשה 4 קפיצות של 3 על ישר המספרים:</p>
+                        <p>0 →3→ 3 →3→ 6 →3→ 9 →3→ <span class="tutorial-highlight">12</span></p>
+                        <div class="tutorial-equation">4 × 3 = 12</div>
                     </div>
                 `
             },
             {
-                speech: 'עכשיו תורך! בוא נתרגל! 🚀',
+                speech: 'אפשר לראות כפל גם בתור מלבן!',
                 content: `
                     <div class="tutorial-step">
-                        <p style="font-size:1.5rem;">🌟 טיפ: 🌟</p>
-                        <p>כפל = חיבור חוזר!</p>
-                        <p>3 × 4 = 4 + 4 + 4 = 12</p>
+                        <p><span class="tutorial-highlight">כפל בעזרת מלבן</span></p>
+                        <p>2 שורות × 5 טורים:</p>
+                        <p>⬜⬜⬜⬜⬜</p>
+                        <p>⬜⬜⬜⬜⬜</p>
+                        <div class="tutorial-equation">2 × 5 = 10</div>
+                    </div>
+                `
+            },
+            {
+                speech: 'וזכרו את חוק החילוף! הסדר לא משנה!',
+                content: `
+                    <div class="tutorial-step">
+                        <p><span class="tutorial-highlight">חוק החילוף</span></p>
+                        <p>הסדר בכפל לא משנה!</p>
+                        <p>🍎🍎🍎 | 🍎🍎🍎 = <span class="tutorial-highlight">2 × 3 = 6</span></p>
+                        <p>🍎🍎 | 🍎🍎 | 🍎🍎 = <span class="tutorial-highlight">3 × 2 = 6</span></p>
+                        <div class="tutorial-equation">2 × 3 = 3 × 2</div>
                         <p style="margin-top:1rem;">בוא נתחיל! 💪</p>
                     </div>
                 `
             }
         ],
 
-        generateExercise(difficulty) {
-            let a, b;
-            if (difficulty < 3) {
-                // Tables 2-5 × 2-5
-                a = randInt(2, 5);
-                b = randInt(2, 5);
-            } else if (difficulty < 7) {
-                // Tables 3-7 × 3-8
-                a = randInt(3, 7);
-                b = randInt(3, 8);
-            } else {
-                // Tables 4-9 × 4-10
-                a = randInt(4, 9);
-                b = randInt(4, 10);
-            }
+        // ---- Difficulty ranges ----
+        _getRange(difficulty) {
+            if (difficulty < 3) return { minA: 2, maxA: 5, minB: 2, maxB: 5 };
+            if (difficulty < 7) return { minA: 2, maxA: 7, minB: 2, maxB: 8 };
+            return { minA: 3, maxA: 9, minB: 3, maxB: 10 };
+        },
+
+        // ---- Question generators ----
+
+        // Basic: a × b = ?
+        _genBasicMult(difficulty) {
+            const r = this._getRange(difficulty);
+            const a = randInt(r.minA, r.maxA), b = randInt(r.minB, r.maxB);
             const answer = a * b;
-            const hint = `💡 ${a} × ${b} = ${Array(a).fill(b).join(' + ')}`;
             return {
                 type: 'input',
                 question: `${a} × ${b} = ?`,
                 displayHTML: `<span>${a}</span> <span class="operator-symbol">×</span> <span>${b}</span> <span class="operator-symbol">=</span> <span style="color:#4A90D9;">?</span>`,
-                answer: answer,
-                hint: hint,
-                visualAid: this.getVisualAid(a, b),
-                explain: (userAns) => this.explainError(a, b, answer, userAns)
+                answer,
+                hint: `💡 חיבור חוזר: ${a} × ${b} = ${Array(a).fill(b).join(' + ')}`,
+                visualAid: this._groupsVisual(a, b),
+                explain: () => `${a} × ${b} = ${Array(a).fill(b).join(' + ')} = ${answer}. כפל זה חיבור חוזר!`
             };
         },
 
-        getVisualAid(a, b) {
-            // Show groups of emoji
-            const emojis = ['🟦', '🟩', '🟧', '🟪', '🟥'];
-            let html = '<div class="blocks-container" style="gap:1rem;">';
-            for (let i = 0; i < a; i++) {
-                html += '<div class="block-group" style="border:2px dashed #CBD5E0; padding:4px; border-radius:8px;">';
-                for (let j = 0; j < b; j++) {
-                    html += `<div class="block block-${['blue','green','orange','pink','purple'][i % 5]}"></div>`;
+        // Write as repeated addition: 4 × 3 = ? + ? + ? + ? → answer is product
+        _genRepeatedAddition(difficulty) {
+            const r = this._getRange(difficulty);
+            const a = randInt(r.minA, Math.min(r.maxA, 6)), b = randInt(r.minB, r.maxB);
+            const answer = a * b;
+            const addStr = Array(a).fill(b).join(' + ');
+            return {
+                type: 'input',
+                question: `${addStr} = ?`,
+                displayHTML: `<span>${addStr}</span> <span class="operator-symbol">=</span> <span style="color:#4A90D9;">?</span>`,
+                answer,
+                hint: `💡 זה בעצם ${a} × ${b}! חיבור חוזר = כפל`,
+                visualAid: this._groupsVisual(a, b),
+                explain: () => `${addStr} = ${answer}. חיבור חוזר של ${b} בדיוק ${a} פעמים זה ${a} × ${b} = ${answer}!`
+            };
+        },
+
+        // Write addition as multiplication: 5+5+5 = ?×? → choose correct multiplication
+        _genWriteAsMult(difficulty) {
+            const r = this._getRange(difficulty);
+            const a = randInt(r.minA, Math.min(r.maxA, 6)), b = randInt(r.minB, r.maxB);
+            const addStr = Array(a).fill(b).join(' + ');
+            const correctStr = `${a} × ${b}`;
+            const wrongs = [];
+            wrongs.push(`${b} × ${a}`); // commutative — also correct but we handle below
+            wrongs.push(`${a + 1} × ${b}`);
+            wrongs.push(`${a} × ${b + 1}`);
+            wrongs.push(`${b} × ${a + 1}`);
+            // filter out duplicates and correct
+            const choices = [correctStr];
+            for (const w of wrongs) {
+                if (!choices.includes(w) && choices.length < 4) choices.push(w);
+            }
+            let safety = 0;
+            while (choices.length < 4 && safety++ < 20) {
+                const c = `${randInt(2, 9)} × ${randInt(2, 9)}`;
+                if (!choices.includes(c)) choices.push(c);
+            }
+            return {
+                type: 'choice',
+                question: `${addStr} = ?`,
+                displayHTML: `<div style="font-size:1.3rem;margin-bottom:0.5rem;">איזה תרגיל כפל מתאים?</div><div style="font-size:1.5rem;">${addStr}</div>`,
+                answer: correctStr,
+                choices: shuffle(choices),
+                hint: `💡 כמה פעמים מופיע ${b}? ← זה מספר הקבוצות`,
+                visualAid: this._groupsVisual(a, b),
+                explain: () => `${addStr} — המספר ${b} מופיע ${a} פעמים, לכן זה ${a} × ${b}. (גם ${b} × ${a} נכון לפי חוק החילוף!)`
+            };
+        },
+
+        // Skip counting: complete the sequence
+        _genSkipCounting(difficulty) {
+            const r = this._getRange(difficulty);
+            const step = randInt(r.minB, Math.min(r.maxB, 8));
+            const count = randInt(r.minA, Math.min(r.maxA, 6));
+            const seq = [];
+            for (let i = 1; i <= count; i++) seq.push(step * i);
+            // Hide last 1-2 elements
+            const hideCount = difficulty < 3 ? 1 : (difficulty < 7 ? 1 : 2);
+            const visiblePart = seq.slice(0, seq.length - hideCount);
+            const answer = seq[seq.length - 1]; // last element
+            const seqDisplay = visiblePart.map(n => `<span>${n}</span>`).join(' , ');
+            const questionMarks = hideCount === 2 ? ` , <span style="color:#E53E3E;">?</span> , <span style="color:#4A90D9;">?</span>` : ` , <span style="color:#4A90D9;">?</span>`;
+            return {
+                type: 'input',
+                question: `מה המספר הבא בסדרה?`,
+                displayHTML: `<div style="font-size:1.1rem;margin-bottom:0.3rem;">ספירה בקפיצות של ${step}:</div><div style="font-size:1.5rem;">${seqDisplay}${questionMarks}</div>`,
+                answer,
+                hint: `💡 כל פעם מוסיפים ${step}. מה בא אחרי ${visiblePart[visiblePart.length - 1]}?`,
+                visualAid: this._numberLineVisual(step, count),
+                explain: () => `הסדרה קופצת ב-${step} כל פעם: ${seq.join(', ')}. התשובה היא ${answer}!`
+            };
+        },
+
+        // Number line jumps: how many jumps / where do we land
+        _genNumberLine(difficulty) {
+            const r = this._getRange(difficulty);
+            const jumpSize = randInt(r.minB, Math.min(r.maxB, 7));
+            const jumpCount = randInt(r.minA, Math.min(r.maxA, 6));
+            const endpoint = jumpSize * jumpCount;
+            // Two sub-types
+            if (Math.random() < 0.5) {
+                // Given jumps and size → where do we land?
+                return {
+                    type: 'input',
+                    question: `${jumpCount} קפיצות של ${jumpSize} על ישר המספרים — מגיעים ל...?`,
+                    displayHTML: `<div style="font-size:1.1rem;margin-bottom:0.3rem;">${jumpCount} קפיצות של ${jumpSize} על ישר המספרים</div><div style="font-size:1.5rem;">נקודת הסיום = <span style="color:#4A90D9;">?</span></div>`,
+                    answer: endpoint,
+                    hint: `💡 ${jumpCount} × ${jumpSize} = ?`,
+                    visualAid: this._numberLineVisual(jumpSize, jumpCount),
+                    explain: () => `${jumpCount} קפיצות של ${jumpSize}: ${Array.from({length: jumpCount}, (_, i) => jumpSize * (i + 1)).join(', ')}. נקודת הסיום היא ${endpoint}!`
+                };
+            } else {
+                // Given endpoint and jump size → how many jumps?
+                return {
+                    type: 'input',
+                    question: `קפיצות של ${jumpSize} עד ${endpoint} — כמה קפיצות?`,
+                    displayHTML: `<div style="font-size:1.1rem;margin-bottom:0.3rem;">קפיצות של ${jumpSize} על ישר המספרים עד ${endpoint}</div><div style="font-size:1.5rem;">מספר הקפיצות = <span style="color:#4A90D9;">?</span></div>`,
+                    answer: jumpCount,
+                    hint: `💡 כמה פעמים ${jumpSize} נכנס ב-${endpoint}?`,
+                    visualAid: this._numberLineVisual(jumpSize, jumpCount),
+                    explain: () => `מ-0 עד ${endpoint} בקפיצות של ${jumpSize}: ${Array.from({length: jumpCount}, (_, i) => jumpSize * (i + 1)).join(', ')}. זה ${jumpCount} קפיצות! (${jumpCount} × ${jumpSize} = ${endpoint})`
+                };
+            }
+        },
+
+        // Rectangle array: rows × columns
+        _genRectangleArray(difficulty) {
+            const r = this._getRange(difficulty);
+            const rows = randInt(r.minA, Math.min(r.maxA, 6));
+            const cols = randInt(r.minB, Math.min(r.maxB, 7));
+            const answer = rows * cols;
+            const rectHTML = this._rectVisual(rows, cols);
+            if (Math.random() < 0.5) {
+                // Count total
+                return {
+                    type: 'input',
+                    question: `כמה ריבועים יש במלבן?`,
+                    displayHTML: `<div style="font-size:1.1rem;margin-bottom:0.3rem;">מלבן: ${rows} שורות × ${cols} טורים</div><div style="font-size:1.5rem;">סך הכל = <span style="color:#4A90D9;">?</span></div>`,
+                    answer,
+                    hint: `💡 ${rows} שורות × ${cols} טורים = ?`,
+                    visualAid: rectHTML,
+                    explain: () => `${rows} שורות × ${cols} טורים = ${rows} × ${cols} = ${answer} ריבועים!`
+                };
+            } else {
+                // Write the multiplication exercise
+                const correctStr = `${rows} × ${cols}`;
+                const choices = [correctStr, `${cols} × ${rows}`, `${rows + 1} × ${cols}`, `${rows} × ${cols + 1}`];
+                const unique = [...new Set(choices)];
+                let safety = 0;
+                while (unique.length < 4 && safety++ < 20) {
+                    const c = `${randInt(2, 8)} × ${randInt(2, 8)}`;
+                    if (!unique.includes(c)) unique.push(c);
+                }
+                return {
+                    type: 'choice',
+                    question: `איזה תרגיל כפל מתאים למלבן?`,
+                    displayHTML: `<div style="font-size:1.1rem;margin-bottom:0.3rem;">כמה שורות? כמה טורים?</div>`,
+                    answer: correctStr,
+                    choices: shuffle(unique.slice(0, 4)),
+                    hint: `💡 ספרו: כמה שורות? כמה טורים?`,
+                    visualAid: rectHTML,
+                    explain: () => `המלבן מכיל ${rows} שורות ו-${cols} טורים, לכן ${rows} × ${cols} = ${answer}. (גם ${cols} × ${rows} נכון — חוק החילוף!)`
+                };
+            }
+        },
+
+        // Equal groups word problem
+        _genGroupsProblem(difficulty) {
+            const r = this._getRange(difficulty);
+            const groups = randInt(r.minA, Math.min(r.maxA, 7));
+            const perGroup = randInt(r.minB, Math.min(r.maxB, 8));
+            const answer = groups * perGroup;
+            const scenarios = [
+                { item: 'ילדים', container: 'קבוצות', singular: 'קבוצה', each: 'אחת', emoji: '👦' },
+                { item: 'עפרונות', container: 'קלמרים', singular: 'קלמר', each: 'אחד', emoji: '✏️' },
+                { item: 'תפוחים', container: 'שקיות', singular: 'שקית', each: 'אחת', emoji: '🍎' },
+                { item: 'ממתקים', container: 'שקיות', singular: 'שקית', each: 'אחת', emoji: '🍬' },
+                { item: 'כדורים', container: 'קופסאות', singular: 'קופסה', each: 'אחת', emoji: '⚽' },
+                { item: 'פרחים', container: 'אגרטלים', singular: 'אגרטל', each: 'אחד', emoji: '🌸' },
+                { item: 'ביצים', container: 'תבניות', singular: 'תבנית', each: 'אחת', emoji: '🥚' },
+                { item: 'עוגיות', container: 'צלחות', singular: 'צלחת', each: 'אחת', emoji: '🍪' }
+            ];
+            const s = scenarios[randInt(0, scenarios.length - 1)];
+            const problemText = `יש ${groups} ${s.container}. בכל ${s.singular} יש ${perGroup} ${s.item}. כמה ${s.item} יש בסך הכל?`;
+            return {
+                type: 'input',
+                question: problemText,
+                displayHTML: `<div style="font-size:1.3rem;line-height:2;">${s.emoji} ${problemText}</div>`,
+                answer,
+                hint: `💡 ${groups} ${s.container} × ${perGroup} ${s.item} = ?`,
+                visualAid: this._groupsVisual(groups, perGroup),
+                explain: () => `${groups} × ${perGroup} = ${answer}. יש ${groups} ${s.container}, בכל ${s.each} ${perGroup} ${s.item}, סך הכל ${answer} ${s.item}!`
+            };
+        },
+
+        // Commutative property
+        _genCommutative(difficulty) {
+            const r = this._getRange(difficulty);
+            const a = randInt(r.minA, r.maxA), b = randInt(r.minB, r.maxB);
+            if (a === b) return this._genBasicMult(difficulty); // avoid trivial case
+            const answer = a * b;
+            // Which equals a × b?
+            const correctStr = `${b} × ${a}`;
+            const wrongs = [`${a} × ${a}`, `${b} × ${b}`, `${a + 1} × ${b}`, `${a} × ${b + 1}`];
+            const choices = [correctStr];
+            for (const w of wrongs) {
+                if (!choices.includes(w) && w !== `${a} × ${b}` && choices.length < 4) choices.push(w);
+            }
+            let safety = 0;
+            while (choices.length < 4 && safety++ < 20) {
+                const c = `${randInt(2, 9)} × ${randInt(2, 9)}`;
+                if (!choices.includes(c)) choices.push(c);
+            }
+            return {
+                type: 'choice',
+                question: `לפי חוק החילוף: ${a} × ${b} = ?`,
+                displayHTML: `<div style="font-size:1.1rem;margin-bottom:0.3rem;">חוק החילוף:</div><div style="font-size:1.5rem;">${a} × ${b} = <span style="color:#4A90D9;">?</span></div>`,
+                answer: correctStr,
+                choices: shuffle(choices),
+                hint: `💡 חוק החילוף: הסדר בכפל לא משנה! ${a} × ${b} = ${b} × ${a}`,
+                visualAid: `<div class="blocks-container" style="gap:1rem;"><div style="text-align:center;"><div style="font-weight:bold;margin-bottom:4px;">${a} × ${b}</div>${this._miniRect(a, b)}</div><div style="font-size:1.5rem;align-self:center;">=</div><div style="text-align:center;"><div style="font-weight:bold;margin-bottom:4px;">${b} × ${a}</div>${this._miniRect(b, a)}</div></div>`,
+                explain: () => `חוק החילוף: ${a} × ${b} = ${b} × ${a} = ${answer}. הסדר לא משנה — התוצאה תמיד זהה!`
+            };
+        },
+
+        // ---- Visual helpers ----
+
+        _groupsVisual(groups, perGroup) {
+            let html = '<div class="blocks-container" style="gap:0.8rem;flex-wrap:wrap;">';
+            const colors = ['blue', 'green', 'orange', 'pink', 'purple'];
+            for (let i = 0; i < Math.min(groups, 8); i++) {
+                html += `<div class="block-group" style="border:2px dashed #CBD5E0;padding:4px;border-radius:8px;">`;
+                for (let j = 0; j < Math.min(perGroup, 10); j++) {
+                    html += `<div class="block block-${colors[i % 5]}"></div>`;
                 }
                 html += '</div>';
             }
@@ -558,9 +784,101 @@ const MODULES = [
             return html;
         },
 
-        explainError(a, b, correct, userAns) {
-            const additions = Array(a).fill(b).join(' + ');
-            return `${a} × ${b} = ${additions} = ${correct}. כפל זה חיבור חוזר! נחבר ${b} בדיוק ${a} פעמים ונקבל ${correct}!`;
+        _numberLineVisual(jumpSize, jumpCount) {
+            const end = jumpSize * jumpCount;
+            const maxVal = end + jumpSize;
+            const width = 400, height = 80, margin = 30;
+            let svg = `<svg viewBox="0 0 ${width} ${height}" style="max-width:100%;direction:ltr;">`;
+            // Line
+            svg += `<line x1="${margin}" y1="50" x2="${width - margin}" y2="50" stroke="#333" stroke-width="2"/>`;
+            // Arrow
+            svg += `<polygon points="${width - margin},50 ${width - margin - 8},44 ${width - margin - 8},56" fill="#333"/>`;
+            // Ticks and labels
+            const tickStep = Math.max(1, Math.ceil(maxVal / 12));
+            for (let v = 0; v <= maxVal; v += tickStep) {
+                const x = margin + (v / maxVal) * (width - 2 * margin);
+                svg += `<line x1="${x}" y1="46" x2="${x}" y2="54" stroke="#333" stroke-width="1.5"/>`;
+                svg += `<text x="${x}" y="68" text-anchor="middle" font-size="10" fill="#333">${v}</text>`;
+            }
+            // Jumps
+            const arcColors = ['#E53E3E', '#DD6B20', '#38A169', '#3182CE', '#805AD5', '#D53F8C'];
+            for (let i = 0; i < jumpCount; i++) {
+                const x1 = margin + ((jumpSize * i) / maxVal) * (width - 2 * margin);
+                const x2 = margin + ((jumpSize * (i + 1)) / maxVal) * (width - 2 * margin);
+                const mx = (x1 + x2) / 2;
+                const color = arcColors[i % arcColors.length];
+                svg += `<path d="M${x1},48 Q${mx},${15} ${x2},48" fill="none" stroke="${color}" stroke-width="2"/>`;
+                svg += `<polygon points="${x2},48 ${x2 - 4},40 ${x2 - 6},48" fill="${color}"/>`;
+                svg += `<text x="${mx}" y="14" text-anchor="middle" font-size="9" fill="${color}">+${jumpSize}</text>`;
+            }
+            svg += '</svg>';
+            return svg;
+        },
+
+        _rectVisual(rows, cols) {
+            const size = 28, gap = 3;
+            const w = cols * (size + gap) + gap;
+            const h = rows * (size + gap) + gap;
+            let svg = `<svg viewBox="0 0 ${w} ${h}" style="max-width:100%;">`;
+            const colors = ['#63B3ED', '#68D391', '#F6AD55', '#FC8181', '#B794F4'];
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const x = gap + c * (size + gap), y = gap + r * (size + gap);
+                    svg += `<rect x="${x}" y="${y}" width="${size}" height="${size}" rx="4" fill="${colors[r % colors.length]}" stroke="#fff" stroke-width="1"/>`;
+                }
+            }
+            svg += '</svg>';
+            return svg;
+        },
+
+        _miniRect(rows, cols) {
+            const s = 14, g = 2;
+            const w = cols * (s + g) + g, h = rows * (s + g) + g;
+            let svg = `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">`;
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    svg += `<rect x="${g + c * (s + g)}" y="${g + r * (s + g)}" width="${s}" height="${s}" rx="2" fill="#63B3ED" stroke="#fff" stroke-width="1"/>`;
+                }
+            }
+            svg += '</svg>';
+            return svg;
+        },
+
+        // ---- Main generator ----
+        generateExercise(difficulty) {
+            const generators = [];
+            if (difficulty < 3) {
+                // Easy: basic mult, repeated addition, groups problem
+                generators.push(
+                    () => this._genBasicMult(difficulty),
+                    () => this._genRepeatedAddition(difficulty),
+                    () => this._genGroupsProblem(difficulty),
+                    () => this._genSkipCounting(difficulty)
+                );
+            } else if (difficulty < 7) {
+                // Medium: all of the above + write as mult, number line, rectangle
+                generators.push(
+                    () => this._genBasicMult(difficulty),
+                    () => this._genRepeatedAddition(difficulty),
+                    () => this._genWriteAsMult(difficulty),
+                    () => this._genSkipCounting(difficulty),
+                    () => this._genNumberLine(difficulty),
+                    () => this._genRectangleArray(difficulty),
+                    () => this._genGroupsProblem(difficulty)
+                );
+            } else {
+                // Hard: all types including commutative
+                generators.push(
+                    () => this._genBasicMult(difficulty),
+                    () => this._genWriteAsMult(difficulty),
+                    () => this._genSkipCounting(difficulty),
+                    () => this._genNumberLine(difficulty),
+                    () => this._genRectangleArray(difficulty),
+                    () => this._genGroupsProblem(difficulty),
+                    () => this._genCommutative(difficulty)
+                );
+            }
+            return generators[randInt(0, generators.length - 1)]();
         }
     },
 
@@ -693,58 +1011,72 @@ const MODULES = [
     },
 
     // ============ MODULE 5: Geometric Shapes ============
+    // Based on "כוח" grade 2 geometry curriculum:
+    // מצלעים (polygons), זוויות ישרות (right angles),
+    // היקף (perimeter), סימטריה (symmetry)
     {
         id: 'shapes',
         name: 'צורות גיאומטריות',
         icon: '🔺',
-        description: 'לומדים על צורות!',
+        description: 'לומדים על מצלעים!',
         exerciseCount: 10,
         quizCount: 10,
 
         tutorial: [
             {
-                speech: 'בוא נלמד על צורות! 🔷',
+                speech: 'בוא נלמד על מצלעים! 🔷',
                 content: `
                     <div class="tutorial-step">
-                        <p>צורות נמצאות בכל מקום!</p>
-                        <p>🔲 חלון = <span class="tutorial-highlight">ריבוע</span></p>
-                        <p>📱 טלפון = <span class="tutorial-highlight">מלבן</span></p>
-                        <p>⚽ כדור = <span class="tutorial-highlight">עיגול</span></p>
-                        <p>🔺 גג בית = <span class="tutorial-highlight">משולש</span></p>
+                        <p><span class="tutorial-highlight">מצלע</span> הוא צורה סגורה שעשויה רק מקווים ישרים.</p>
+                        <p>הקווים נקראים <span class="tutorial-highlight">צלעות</span>,</p>
+                        <p>ונקודות החיבור בין הצלעות נקראות <span class="tutorial-highlight">קדקודים</span>.</p>
+                        <p style="margin-top:0.5rem;">סוג המצלע נקבע לפי מספר הצלעות או הקדקודים שלו.</p>
                     </div>
                 `
             },
             {
-                speech: 'לכל צורה יש תכונות!',
+                speech: 'לכל מצלע יש שם לפי מספר הצלעות!',
                 content: `
                     <div class="tutorial-step">
-                        <p>🔺 <span class="tutorial-highlight">משולש</span> - 3 צלעות, 3 פינות</p>
-                        <p>🔲 <span class="tutorial-highlight">ריבוע</span> - 4 צלעות שוות, 4 פינות</p>
-                        <p>▬ <span class="tutorial-highlight">מלבן</span> - 4 צלעות (2 ארוכות, 2 קצרות), 4 פינות</p>
-                        <p>⭕ <span class="tutorial-highlight">עיגול</span> - בלי צלעות, בלי פינות!</p>
+                        <p>🔺 <span class="tutorial-highlight">משולש</span> - 3 צלעות, 3 קדקודים</p>
+                        <p>🔲 <span class="tutorial-highlight">מרובע</span> - 4 צלעות, 4 קדקודים</p>
+                        <p>⬠ <span class="tutorial-highlight">מחומש</span> - 5 צלעות, 5 קדקודים</p>
+                        <p>⬡ <span class="tutorial-highlight">משושה</span> - 6 צלעות, 6 קדקודים</p>
+                        <p style="margin-top:0.5rem;">💡 שם המצלע אומר כמה צלעות!</p>
                     </div>
                 `
             },
             {
-                speech: 'וגם צורות מיוחדות!',
+                speech: 'יש סוגים מיוחדים של מרובעים!',
                 content: `
                     <div class="tutorial-step">
-                        <p>⬠ <span class="tutorial-highlight">מחומש</span> - 5 צלעות, 5 פינות</p>
-                        <p>⬡ <span class="tutorial-highlight">משושה</span> - 6 צלעות, 6 פינות</p>
-                        <p style="margin-top:1rem;">💡 <span class="tutorial-highlight">טיפ:</span></p>
-                        <p>שם הצורה אומר כמה צלעות!</p>
-                        <p>משולש = 3, מרובע = 4, מחומש = 5...</p>
+                        <p>🔲 <span class="tutorial-highlight">ריבוע</span> - 4 צלעות שוות, כל הזוויות ישרות</p>
+                        <p>▬ <span class="tutorial-highlight">מלבן</span> - כל הזוויות ישרות, לא כל הצלעות שוות</p>
+                        <p>◇ <span class="tutorial-highlight">מעוין</span> - 4 צלעות שוות, בלי זוויות ישרות</p>
                     </div>
                 `
             },
             {
-                speech: 'יש עוד צורות מעניינות!',
+                speech: 'מה זו זווית ישרה?',
                 content: `
                     <div class="tutorial-step">
-                        <p>◇ <span class="tutorial-highlight">מעוין</span> - 4 צלעות שוות, כמו יהלום</p>
-                        <p>⏢ <span class="tutorial-highlight">טרפז</span> - 4 צלעות, 2 מקבילות</p>
-                        <p>⬮ <span class="tutorial-highlight">אליפסה</span> - כמו עיגול מתוח, בלי צלעות!</p>
-                        <p>⭐ <span class="tutorial-highlight">כוכב</span> - יש לו 5 חודים!</p>
+                        <p><span class="tutorial-highlight">זווית ישרה</span> היא כמו פינה של דף. 📐</p>
+                        <p>אפשר לבדוק בעזרת פינה של דף או של קלף!</p>
+                        <p style="margin-top:0.5rem;">✅ ל<span class="tutorial-highlight">ריבוע</span> - 4 זוויות ישרות</p>
+                        <p>✅ ל<span class="tutorial-highlight">מלבן</span> - 4 זוויות ישרות</p>
+                        <p>❌ ל<span class="tutorial-highlight">מעוין</span> - אין זוויות ישרות</p>
+                    </div>
+                `
+            },
+            {
+                speech: 'ועכשיו נלמד על היקף!',
+                content: `
+                    <div class="tutorial-step">
+                        <p><span class="tutorial-highlight">היקף</span> של מצלע הוא סכום אורכי הצלעות שלו.</p>
+                        <p style="margin-top:0.5rem;">למשל: משולש עם צלעות 3, 3, 5</p>
+                        <p>היקף = 3 + 3 + 5 = <span class="tutorial-highlight">11 ס"מ</span></p>
+                        <p style="margin-top:0.5rem;">💡 אם כל הצלעות שוות, אפשר להשתמש בכפל!</p>
+                        <p>מחומש עם צלע 3 → היקף = 3 × 5 = <span class="tutorial-highlight">15 ס"מ</span></p>
                     </div>
                 `
             },
@@ -752,12 +1084,11 @@ const MODULES = [
                 speech: 'עכשיו תורך! 🌟',
                 content: `
                     <div class="tutorial-step">
-                        <p>בוא נתרגל לזהות צורות!</p>
-                        <p>נשאל אותך שאלות על:</p>
-                        <p>✅ זיהוי צורות</p>
-                        <p>✅ ספירת צלעות ופינות</p>
-                        <p>✅ השוואת צורות</p>
-                        <p>✅ מציאת הצורה השונה</p>
+                        <p>בוא נתרגל!</p>
+                        <p>✅ זיהוי מצלעים</p>
+                        <p>✅ ספירת צלעות וקדקודים</p>
+                        <p>✅ זוויות ישרות</p>
+                        <p>✅ חישוב היקף</p>
                         <p style="margin-top:1rem;">מוכנים? 🚀</p>
                     </div>
                 `
@@ -765,25 +1096,22 @@ const MODULES = [
         ],
 
         _shapeData: {
-            triangle:  { name: 'משולש', sides: 3, corners: 3 },
-            square:    { name: 'ריבוע', sides: 4, corners: 4 },
-            rectangle: { name: 'מלבן', sides: 4, corners: 4 },
-            circle:    { name: 'עיגול', sides: 0, corners: 0 },
-            pentagon:  { name: 'מחומש', sides: 5, corners: 5 },
-            hexagon:   { name: 'משושה', sides: 6, corners: 6 },
-            trapezoid: { name: 'טרפז', sides: 4, corners: 4 },
-            rhombus:   { name: 'מעוין', sides: 4, corners: 4 },
-            oval:      { name: 'אליפסה', sides: 0, corners: 0 },
-            star:      { name: 'כוכב', sides: 10, corners: 5, points: 5 }
+            triangle:  { name: 'משולש', sides: 3, vertices: 3, rightAngles: 0, allSidesEqual: false },
+            square:    { name: 'ריבוע', sides: 4, vertices: 4, rightAngles: 4, allSidesEqual: true },
+            rectangle: { name: 'מלבן', sides: 4, vertices: 4, rightAngles: 4, allSidesEqual: false },
+            pentagon:  { name: 'מחומש', sides: 5, vertices: 5, rightAngles: 0, allSidesEqual: false },
+            hexagon:   { name: 'משושה', sides: 6, vertices: 6, rightAngles: 0, allSidesEqual: false },
+            rhombus:   { name: 'מעוין', sides: 4, vertices: 4, rightAngles: 0, allSidesEqual: true }
         },
 
         // Shape pools by difficulty
-        _easyShapes: ['triangle', 'square', 'rectangle', 'circle'],
-        _mediumShapes: ['triangle', 'square', 'rectangle', 'circle', 'pentagon', 'hexagon', 'trapezoid', 'rhombus', 'oval'],
-        _hardShapes: ['triangle', 'square', 'rectangle', 'circle', 'pentagon', 'hexagon', 'trapezoid', 'rhombus', 'oval', 'star'],
+        _easyShapes: ['triangle', 'square', 'rectangle'],
+        _mediumShapes: ['triangle', 'square', 'rectangle', 'pentagon', 'hexagon'],
+        _hardShapes: ['triangle', 'square', 'rectangle', 'pentagon', 'hexagon', 'rhombus'],
 
         // --- Question generators ---
 
+        // Q1: Identify shape name
         _genIdentify(pool) {
             const shapeKey = pool[randInt(0, pool.length - 1)];
             const shape = this._shapeData[shapeKey];
@@ -791,16 +1119,17 @@ const MODULES = [
             const choices = shuffle([shape.name, ...shuffle(otherNames).slice(0, 3)]);
             return {
                 type: 'choice',
-                question: 'מה שם הצורה הזאת?',
-                displayHTML: '<div class="question-text">מה שם הצורה הזאת?</div>',
+                question: 'מה שם המצלע?',
+                displayHTML: '<div class="question-text">מה שם המצלע?</div>',
                 answer: shape.name,
                 choices: choices,
-                hint: `💡 ספור את הצלעות: ${shape.sides === 0 ? 'אין צלעות — זה עגול!' : `יש ${shape.sides} צלעות`}`,
+                hint: `💡 ספרו את הצלעות: יש ${shape.sides} צלעות`,
                 visualAid: `<div class="shape-display">${createShapeSVG(shapeKey, 180)}</div>`,
-                explain: () => `זו צורה בשם ${shape.name}. ${shape.sides > 0 ? `יש לה ${shape.sides} צלעות ו-${shape.corners} פינות.` : 'אין לה צלעות ואין לה פינות!'}`
+                explain: () => `זהו ${shape.name}. יש לו ${shape.sides} צלעות ו-${shape.vertices} קדקודים.`
             };
         },
 
+        // Q2: Count sides (צלעות)
         _genCountSides(pool) {
             const shapeKey = pool[randInt(0, pool.length - 1)];
             const shape = this._shapeData[shapeKey];
@@ -809,26 +1138,28 @@ const MODULES = [
                 question: `כמה צלעות יש ל${shape.name}?`,
                 displayHTML: `<div class="question-text">כמה צלעות יש ל${shape.name}?</div>`,
                 answer: shape.sides,
-                hint: '💡 צלע = קו ישר. ספור את הקווים בצורה',
+                hint: '💡 צלע = קו ישר. ספרו את הקווים!',
                 visualAid: `<div class="shape-display">${createShapeSVG(shapeKey, 180)}</div>`,
-                explain: () => `ל${shape.name} יש ${shape.sides} צלעות. ${shape.sides === 0 ? 'אין קווים ישרים!' : `ספור את הקווים - יש ${shape.sides}!`}`
+                explain: () => `ל${shape.name} יש ${shape.sides} צלעות.`
             };
         },
 
-        _genCountCorners(pool) {
+        // Q3: Count vertices (קדקודים)
+        _genCountVertices(pool) {
             const shapeKey = pool[randInt(0, pool.length - 1)];
             const shape = this._shapeData[shapeKey];
             return {
                 type: 'input',
-                question: `כמה פינות יש ל${shape.name}?`,
-                displayHTML: `<div class="question-text">כמה פינות יש ל${shape.name}?</div>`,
-                answer: shape.corners,
-                hint: '💡 פינה = מקום שבו שני קווים נפגשים. ספור את הנקודות!',
+                question: `כמה קדקודים יש ל${shape.name}?`,
+                displayHTML: `<div class="question-text">כמה קדקודים יש ל${shape.name}?</div>`,
+                answer: shape.vertices,
+                hint: '💡 קדקוד = נקודת חיבור בין שתי צלעות. סמנו וספרו!',
                 visualAid: `<div class="shape-display">${createShapeSVG(shapeKey, 180)}</div>`,
-                explain: () => `ל${shape.name} יש ${shape.corners} פינות. ${shape.corners === 0 ? 'אין פינות כי אין קווים ישרים!' : `פינה היא המקום שבו שני קווים נפגשים.`}`
+                explain: () => `ל${shape.name} יש ${shape.vertices} קדקודים. קדקוד הוא הנקודה שבה שתי צלעות נפגשות.`
             };
         },
 
+        // Q4: Compare sides between two shapes
         _genSidesCompare(pool) {
             let key1, key2, s1, s2;
             let attempts = 0;
@@ -844,53 +1175,177 @@ const MODULES = [
             const answer = s1.sides > s2.sides ? s1.name : s2.name;
             return {
                 type: 'choice',
-                question: 'לאיזו צורה יש יותר צלעות?',
-                displayHTML: '<div class="question-text">לאיזו צורה יש יותר צלעות?</div>',
+                question: 'לאיזה מצלע יש יותר צלעות?',
+                displayHTML: '<div class="question-text">לאיזה מצלע יש יותר צלעות?</div>',
                 answer: answer,
                 choices: shuffle([s1.name, s2.name]),
-                hint: '💡 ספור את הצלעות של כל צורה!',
+                hint: '💡 ספרו את הצלעות של כל מצלע!',
                 visualAid: `<div class="shape-display" style="display:flex;gap:2rem;justify-content:center;">
                     <div style="text-align:center;">${createShapeSVG(key1, 140)}<div>${s1.name}</div></div>
                     <div style="text-align:center;">${createShapeSVG(key2, 140)}<div>${s2.name}</div></div>
                 </div>`,
-                explain: () => `ל${s1.name} יש ${s1.sides} צלעות ול${s2.name} יש ${s2.sides} צלעות. ${answer} היא התשובה!`
+                explain: () => `ל${s1.name} יש ${s1.sides} צלעות ול${s2.name} יש ${s2.sides} צלעות. ל${answer} יש יותר!`
             };
         },
 
-        _genShapeByProperty(pool) {
+        // Q5: Does shape have right angles? (זוויות ישרות)
+        _genRightAngles(pool) {
             const shapeKey = pool[randInt(0, pool.length - 1)];
             const shape = this._shapeData[shapeKey];
-            const targetSides = shape.sides;
+            const hasRightAngles = shape.rightAngles > 0;
+            return {
+                type: 'choice',
+                question: `האם ל${shape.name} יש זוויות ישרות?`,
+                displayHTML: `<div class="question-text">האם ל${shape.name} יש זוויות ישרות? 📐</div>`,
+                answer: hasRightAngles ? 'כן' : 'לא',
+                choices: ['כן', 'לא'],
+                hint: '💡 זווית ישרה היא כמו פינה של דף. בדקו אם הפינות נראות כמו פינת דף!',
+                visualAid: `<div class="shape-display">${createShapeSVG(shapeKey, 180)}</div>`,
+                explain: () => hasRightAngles
+                    ? `כן! ל${shape.name} יש ${shape.rightAngles} זוויות ישרות.`
+                    : `לא! ל${shape.name} אין זוויות ישרות. הזוויות שלו לא כמו פינת דף.`
+            };
+        },
 
-            const questionText = targetSides === 0
-                ? 'לאיזו צורה אין צלעות בכלל?'
-                : `לאיזו צורה יש בדיוק ${targetSides} צלעות?`;
+        // Q6: How many right angles?
+        _genCountRightAngles(pool) {
+            const shapesWithRA = pool.filter(k => this._shapeData[k].rightAngles > 0);
+            const useWithRA = shapesWithRA.length > 0 && Math.random() < 0.6;
+            const pickPool = useWithRA ? shapesWithRA : pool;
+            const shapeKey = pickPool[randInt(0, pickPool.length - 1)];
+            const shape = this._shapeData[shapeKey];
+            return {
+                type: 'input',
+                question: `כמה זוויות ישרות יש ל${shape.name}?`,
+                displayHTML: `<div class="question-text">כמה זוויות ישרות יש ל${shape.name}? 📐</div>`,
+                answer: shape.rightAngles,
+                hint: '💡 זווית ישרה = כמו פינת דף. לריבוע ולמלבן יש 4!',
+                visualAid: `<div class="shape-display">${createShapeSVG(shapeKey, 180)}</div>`,
+                explain: () => shape.rightAngles > 0
+                    ? `ל${shape.name} יש ${shape.rightAngles} זוויות ישרות.`
+                    : `ל${shape.name} אין זוויות ישרות (0).`
+            };
+        },
 
-            // Wrong choices: shapes with DIFFERENT side count
-            const wrongNames = Object.values(this._shapeData)
-                .filter(s => s.sides !== targetSides)
-                .map(s => s.name);
-            const choices = shuffle([shape.name, ...shuffle(wrongNames).slice(0, 3)]);
+        // Q7: Identify shape by its properties
+        _genShapeByProperty(pool) {
+            const properties = [
+                { q: 'לאיזה מצלע יש 4 זוויות ישרות וכל הצלעות שוות?', answer: 'ריבוע', key: 'square', hint: '💡 כל הצלעות שוות + כל הזוויות ישרות = ?' },
+                { q: 'לאיזה מצלע יש 4 זוויות ישרות, אבל לא כל הצלעות שוות?', answer: 'מלבן', key: 'rectangle', hint: '💡 כל הזוויות ישרות, אבל לא כל הצלעות שוות...' },
+                { q: 'לאיזה מצלע יש 4 צלעות שוות אבל אין זוויות ישרות?', answer: 'מעוין', key: 'rhombus', hint: '💡 כל הצלעות שוות, אבל הזוויות לא ישרות...' },
+                { q: 'לאיזה מצלע יש 3 צלעות ו-3 קדקודים?', answer: 'משולש', key: 'triangle', hint: '💡 שם המצלע רומז: מ-שולש = שלוש!' },
+                { q: 'לאיזה מצלע יש 5 צלעות ו-5 קדקודים?', answer: 'מחומש', key: 'pentagon', hint: '💡 מ-חומש = חמש!' },
+                { q: 'לאיזה מצלע יש 6 צלעות ו-6 קדקודים?', answer: 'משושה', key: 'hexagon', hint: '💡 מ-שושה = שש!' }
+            ];
+
+            const available = properties.filter(p => pool.includes(p.key));
+            if (available.length === 0) return this._genIdentify(pool);
+
+            const prop = available[randInt(0, available.length - 1)];
+            const otherNames = Object.values(this._shapeData).map(s => s.name).filter(n => n !== prop.answer);
+            const choices = shuffle([prop.answer, ...shuffle(otherNames).slice(0, 3)]);
 
             return {
                 type: 'choice',
-                question: questionText,
-                displayHTML: `<div class="question-text">${questionText}</div>`,
-                answer: shape.name,
+                question: prop.q,
+                displayHTML: `<div class="question-text">${prop.q}</div>`,
+                answer: prop.answer,
                 choices: choices,
-                hint: targetSides === 0
-                    ? '💡 חשוב: איזו צורה עגולה ואין לה קווים ישרים?'
-                    : '💡 שם הצורה לפעמים רומז על מספר הצלעות!',
+                hint: prop.hint,
                 visualAid: '',
-                explain: () => `ל${shape.name} יש ${targetSides === 0 ? 'אפס' : targetSides} צלעות!`
+                explain: () => `התשובה היא ${prop.answer}!`
             };
         },
 
+        // Q8: Perimeter calculation (היקף)
+        _genPerimeter(pool) {
+            const shapeKey = pool[randInt(0, pool.length - 1)];
+            const shape = this._shapeData[shapeKey];
+            let sides, perimeter, exercise, visualHTML;
+
+            if (shape.allSidesEqual) {
+                const sideLen = randInt(2, 9);
+                perimeter = sideLen * shape.sides;
+                sides = Array(shape.sides).fill(sideLen);
+                exercise = sides.join(' + ') + ' = ' + perimeter;
+                visualHTML = `<div class="shape-display">
+                    ${createShapeSVG(shapeKey, 180)}
+                    <div style="text-align:center;margin-top:0.5rem;">אורך כל צלע: ${sideLen} ס"מ</div>
+                </div>`;
+            } else if (shapeKey === 'rectangle') {
+                const len = randInt(3, 9);
+                const wid = randInt(2, len - 1);
+                perimeter = 2 * (len + wid);
+                sides = [len, wid, len, wid];
+                exercise = `${len} + ${wid} + ${len} + ${wid} = ${perimeter}`;
+                visualHTML = `<div class="shape-display">
+                    ${createShapeSVG(shapeKey, 180)}
+                    <div style="text-align:center;margin-top:0.5rem;">צלעות: ${len} ס"מ ו-${wid} ס"מ</div>
+                </div>`;
+            } else if (shapeKey === 'triangle') {
+                let s1, s2, s3, valid = false;
+                for (let i = 0; i < 10 && !valid; i++) {
+                    s1 = randInt(2, 8); s2 = randInt(2, 8); s3 = randInt(2, 8);
+                    valid = (s1 + s2 > s3) && (s1 + s3 > s2) && (s2 + s3 > s1);
+                }
+                if (!valid) { s1 = 3; s2 = 4; s3 = 5; }
+                perimeter = s1 + s2 + s3;
+                sides = [s1, s2, s3];
+                exercise = `${s1} + ${s2} + ${s3} = ${perimeter}`;
+                visualHTML = `<div class="shape-display">
+                    ${createShapeSVG(shapeKey, 180)}
+                    <div style="text-align:center;margin-top:0.5rem;">צלעות: ${s1}, ${s2}, ${s3} ס"מ</div>
+                </div>`;
+            } else {
+                sides = [];
+                for (let i = 0; i < shape.sides; i++) { sides.push(randInt(2, 6)); }
+                perimeter = sides.reduce((a, b) => a + b, 0);
+                exercise = sides.join(' + ') + ' = ' + perimeter;
+                visualHTML = `<div class="shape-display">
+                    ${createShapeSVG(shapeKey, 180)}
+                    <div style="text-align:center;margin-top:0.5rem;">צלעות: ${sides.join(', ')} ס"מ</div>
+                </div>`;
+            }
+
+            return {
+                type: 'input',
+                question: `מה ההיקף של ה${shape.name}?`,
+                displayHTML: `<div class="question-text">מה ההיקף של ה${shape.name}? (בס"מ)</div>`,
+                answer: perimeter,
+                hint: `💡 היקף = סכום אורכי כל הצלעות: ${sides.join(' + ')}`,
+                visualAid: visualHTML,
+                explain: () => `היקף ה${shape.name} = ${exercise} ס"מ`
+            };
+        },
+
+        // Q9: Perimeter with equal sides using multiplication
+        _genPerimeterMultiply(pool) {
+            const shapeKey = pool[randInt(0, pool.length - 1)];
+            const shape = this._shapeData[shapeKey];
+            const sideLen = randInt(2, 8);
+            const perimeter = sideLen * shape.sides;
+
+            return {
+                type: 'input',
+                question: `ל${shape.name} כל הצלעות שוות. אורך כל צלע ${sideLen} ס"מ. מה ההיקף?`,
+                displayHTML: `<div class="question-text">ל${shape.name} כל הצלעות שוות.<br>אורך כל צלע: ${sideLen} ס"מ. מה ההיקף?</div>`,
+                answer: perimeter,
+                hint: `💡 כשכל הצלעות שוות: היקף = אורך צלע × מספר צלעות = ${sideLen} × ${shape.sides}`,
+                visualAid: `<div class="shape-display">
+                    ${createShapeSVG(shapeKey, 180)}
+                    <div style="text-align:center;margin-top:0.5rem;">אורך כל צלע: ${sideLen} ס"מ</div>
+                </div>`,
+                explain: () => `היקף = ${sideLen} × ${shape.sides} = ${perimeter} ס"מ`
+            };
+        },
+
+        // Q10: Odd one out (יוצא דופן)
         _genOddOneOut(pool) {
             const strategies = [
-                { match: s => s.corners > 0, mismatch: s => s.corners === 0, reason: 'אין לה פינות, בעוד לאחרות יש' },
-                { match: s => s.sides === 4, mismatch: s => s.sides !== 4 && s.sides > 0, reason: 'אין לה 4 צלעות כמו לאחרות' },
-                { match: s => s.sides > 0, mismatch: s => s.sides === 0, reason: 'אין לה צלעות כמו לאחרות' }
+                { match: s => s.rightAngles > 0, mismatch: s => s.rightAngles === 0, reason: 'אין לו זוויות ישרות, אבל לאחרים יש' },
+                { match: s => s.sides === 4, mismatch: s => s.sides !== 4, reason: 'אין לו 4 צלעות כמו לאחרים' },
+                { match: s => s.allSidesEqual, mismatch: s => !s.allSidesEqual, reason: 'לא כל הצלעות שלו שוות, אבל לאחרים כל הצלעות שוות' },
+                { match: s => s.rightAngles === 0, mismatch: s => s.rightAngles > 0, reason: 'יש לו זוויות ישרות, אבל לאחרים אין' }
             ];
             const strat = strategies[randInt(0, strategies.length - 1)];
 
@@ -906,27 +1361,15 @@ const MODULES = [
 
             return {
                 type: 'choice',
-                question: 'איזו צורה שונה מהאחרות?',
-                displayHTML: '<div class="question-text">איזו צורה שונה מהאחרות?</div>',
+                question: 'איזה מצלע יוצא דופן?',
+                displayHTML: '<div class="question-text">איזה מצלע יוצא דופן?</div>',
                 answer: oddOne[1].name,
                 choices: allFour.map(([, s]) => s.name),
-                hint: '💡 חפש מה משותף לשלוש צורות, ומה שונה באחת!',
+                hint: '💡 חפשו מה משותף לשלושה מצלעים, ומה שונה באחד!',
                 visualAid: `<div class="shape-display" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
                     ${allFour.map(([k, s]) => `<div style="text-align:center;">${createShapeSVG(k, 120)}<div>${s.name}</div></div>`).join('')}
                 </div>`,
-                explain: () => `${oddOne[1].name} שונה כי ${strat.reason}!`
-            };
-        },
-
-        _genCountStarPoints() {
-            return {
-                type: 'input',
-                question: 'כמה חודים (קצוות בולטים) יש לכוכב?',
-                displayHTML: '<div class="question-text">כמה חודים יש לכוכב?</div>',
-                answer: 5,
-                hint: '💡 ספור את הקצוות החדים של הכוכב!',
-                visualAid: `<div class="shape-display">${createShapeSVG('star', 180)}</div>`,
-                explain: () => 'לכוכב יש 5 חודים! ספור את הקצוות שבולטים החוצה.'
+                explain: () => `${oddOne[1].name} יוצא דופן כי ${strat.reason}!`
             };
         },
 
@@ -934,36 +1377,41 @@ const MODULES = [
             let qType, pool;
 
             if (difficulty < 3) {
-                // EASY: basic shapes, basic questions
-                const types = ['identify', 'count_sides', 'count_corners'];
+                // EASY: basic shapes - identify, count sides/vertices
+                const types = ['identify', 'count_sides', 'count_vertices'];
                 qType = types[difficulty % types.length];
                 pool = this._easyShapes;
-            } else if (difficulty < 7) {
-                // MEDIUM: all shapes + comparison/property questions
-                const types = ['identify', 'sides_compare', 'shape_by_property', 'count_sides'];
+            } else if (difficulty < 6) {
+                // MEDIUM: more shapes + right angles + comparisons
+                const types = ['right_angles', 'count_right_angles', 'sides_compare', 'shape_by_property'];
                 qType = types[(difficulty - 3) % types.length];
                 pool = this._mediumShapes;
             } else {
-                // HARD: all shapes + odd-one-out + star
-                const types = ['odd_one_out', 'count_star_points', 'shape_by_property'];
-                qType = types[(difficulty - 7) % types.length];
+                // HARD: all shapes + perimeter + odd-one-out
+                const types = ['perimeter', 'perimeter_multiply', 'odd_one_out', 'shape_by_property'];
+                qType = types[(difficulty - 6) % types.length];
                 pool = this._hardShapes;
             }
 
             switch (qType) {
                 case 'identify': return this._genIdentify(pool);
                 case 'count_sides': return this._genCountSides(pool);
-                case 'count_corners': return this._genCountCorners(pool);
+                case 'count_vertices': return this._genCountVertices(pool);
                 case 'sides_compare': return this._genSidesCompare(pool);
+                case 'right_angles': return this._genRightAngles(pool);
+                case 'count_right_angles': return this._genCountRightAngles(pool);
                 case 'shape_by_property': return this._genShapeByProperty(pool);
+                case 'perimeter': return this._genPerimeter(pool);
+                case 'perimeter_multiply': return this._genPerimeterMultiply(pool);
                 case 'odd_one_out': return this._genOddOneOut(pool);
-                case 'count_star_points': return this._genCountStarPoints();
                 default: return this._genIdentify(pool);
             }
         }
     },
 
     // ============ MODULE 6: Telling Time ============
+    // Based on "שבילים חדשים 6" grade 2 curriculum:
+    // Full hours, half hours, digital format, time duration
     {
         id: 'clock',
         name: 'שעון',
@@ -1016,6 +1464,27 @@ const MODULES = [
                 `
             },
             {
+                speech: 'יש גם שעון דיגיטלי!',
+                content: `
+                    <div class="tutorial-step">
+                        <p>בשעון דיגיטלי רואים <span class="tutorial-highlight">מספרים</span>:</p>
+                        <div style="display:flex;justify-content:center;gap:1.5rem;margin:1rem 0;align-items:center;">
+                            <div style="width:80px;height:80px;">${createClockSVG(8, 0)}</div>
+                            <div style="font-size:1.5rem;">→</div>
+                            ${createDigitalClockHTML(8, 0)}
+                        </div>
+                        <div style="display:flex;justify-content:center;gap:1.5rem;margin:1rem 0;align-items:center;">
+                            <div style="width:80px;height:80px;">${createClockSVG(8, 30)}</div>
+                            <div style="font-size:1.5rem;">→</div>
+                            ${createDigitalClockHTML(8, 30)}
+                        </div>
+                        <p>שעה עגולה = <span class="tutorial-highlight">:00</span></p>
+                        <p>חצי שעה = <span class="tutorial-highlight">:30</span></p>
+                        <p>בשעה אחת יש <span class="tutorial-highlight">60 דקות</span>!</p>
+                    </div>
+                `
+            },
+            {
                 speech: 'מעולה! בוא נתרגל! ⏰',
                 content: `
                     <div class="tutorial-step">
@@ -1031,68 +1500,244 @@ const MODULES = [
         ],
 
         generateExercise(difficulty) {
-            let hours, minutes;
-            const minuteOptions = [0, 15, 30, 45];
-            if (difficulty < 3) {
-                // Full and half hours
-                hours = randInt(1, 12);
-                minutes = [0, 30][randInt(0, 1)];
-            } else if (difficulty < 7) {
-                // Quarter hours
-                hours = randInt(1, 12);
-                minutes = minuteOptions[randInt(0, 3)];
-            } else {
-                // Any 5-minute interval
-                hours = randInt(1, 12);
-                minutes = randInt(0, 11) * 5;
-            }
-
             const pad = (n) => n.toString().padStart(2, '0');
-            const timeStr = `${hours}:${pad(minutes)}`;
+            const fmtTime = (h, m) => `${h}:${pad(m)}`;
 
-            // Alternate between question types
-            if (difficulty % 2 === 0) {
-                // Show clock, ask time (multiple choice)
-                const wrongTimes = [];
-                while (wrongTimes.length < 3) {
+            // Add time helper (handles 12-hour wrap)
+            const addTime = (h, m, addMin) => {
+                const total = h * 60 + m + addMin;
+                let newH = Math.floor(total / 60) % 12;
+                if (newH === 0) newH = 12;
+                return { hours: newH, minutes: total % 60 };
+            };
+
+            // Generate wrong time choices
+            const makeWrongTimes = (correctH, correctM, count, includeHalf) => {
+                const correct = fmtTime(correctH, correctM);
+                const wrongs = [];
+                let attempts = 0;
+                while (wrongs.length < count && attempts < 50) {
+                    attempts++;
                     const wh = randInt(1, 12);
-                    const wm = difficulty < 3 ? [0, 30][randInt(0, 1)] : randInt(0, 11) * 5;
-                    const wt = `${wh}:${pad(wm)}`;
-                    if (wt !== timeStr && !wrongTimes.includes(wt)) {
-                        wrongTimes.push(wt);
+                    const wm = includeHalf ? [0, 30][randInt(0, 1)] : 0;
+                    const ws = fmtTime(wh, wm);
+                    if (ws !== correct && !wrongs.includes(ws)) wrongs.push(ws);
+                }
+                return wrongs;
+            };
+
+            const hours = randInt(1, 12);
+
+            // ===== EASY (0-2): Full hours only =====
+            if (difficulty < 3) {
+                const qType = difficulty % 3;
+
+                if (qType === 0) {
+                    // Read analog clock → choose time
+                    const choices = shuffle([fmtTime(hours, 0), ...makeWrongTimes(hours, 0, 3, false)]);
+                    return {
+                        type: 'choice',
+                        question: 'מה השעה?',
+                        displayHTML: '<div class="question-text">מה השעה?</div>',
+                        answer: fmtTime(hours, 0),
+                        choices: choices,
+                        hint: '💡 המחוג הארוך על 12 = שעה עגולה. תסתכל על המחוג הקצר!',
+                        visualAid: `<div class="clock-display" style="margin:0 auto;">${createClockSVG(hours, 0)}</div>`,
+                        explain: () => `המחוג הארוך על 12 (שעה עגולה), והמחוג הקצר על ${hours}. השעה ${fmtTime(hours, 0)}!`
+                    };
+                } else if (qType === 1) {
+                    // Identify hour hand number
+                    return {
+                        type: 'input',
+                        question: 'על איזה מספר המחוג הקצר מצביע?',
+                        displayHTML: '<div class="question-text">על איזה מספר המחוג הקצר מצביע?</div>',
+                        answer: hours,
+                        hint: '💡 המחוג הקצר (העבה) מראה את השעה!',
+                        visualAid: `<div class="clock-display" style="margin:0 auto;">${createClockSVG(hours, 0)}</div>`,
+                        explain: () => `המחוג הקצר מצביע על ${hours}. השעה ${fmtTime(hours, 0)}!`
+                    };
+                } else {
+                    // Match analog to digital format
+                    const choices = shuffle([fmtTime(hours, 0), ...makeWrongTimes(hours, 0, 3, false)]);
+                    return {
+                        type: 'choice',
+                        question: 'מה השעה בשעון הדיגיטלי?',
+                        displayHTML: '<div class="question-text">מה השעה בשעון הדיגיטלי?</div>',
+                        answer: fmtTime(hours, 0),
+                        choices: choices,
+                        hint: '💡 שעה עגולה בשעון דיגיטלי נכתבת עם :00',
+                        visualAid: `<div class="clock-display" style="margin:0 auto;">${createClockSVG(hours, 0)}</div>`,
+                        explain: () => `המחוג הקצר על ${hours}. בשעון דיגיטלי: ${fmtTime(hours, 0)}!`
+                    };
+                }
+
+            // ===== MEDIUM (3-6): Half hours + digital =====
+            } else if (difficulty < 7) {
+                const qType = (difficulty - 3) % 4;
+
+                if (qType === 0) {
+                    // Read half hour
+                    const choices = shuffle([fmtTime(hours, 30), ...makeWrongTimes(hours, 30, 3, true)]);
+                    return {
+                        type: 'choice',
+                        question: 'מה השעה?',
+                        displayHTML: '<div class="question-text">מה השעה?</div>',
+                        answer: fmtTime(hours, 30),
+                        choices: choices,
+                        hint: '💡 המחוג הארוך על 6 = וחצי. תסתכל על המחוג הקצר!',
+                        visualAid: `<div class="clock-display" style="margin:0 auto;">${createClockSVG(hours, 30)}</div>`,
+                        explain: () => `המחוג הארוך על 6 = חצי שעה. המחוג הקצר ליד ${hours}. השעה ${hours} וחצי = ${fmtTime(hours, 30)}!`
+                    };
+                } else if (qType === 1) {
+                    // Read mixed (full or half)
+                    const minutes = [0, 30][randInt(0, 1)];
+                    const choices = shuffle([fmtTime(hours, minutes), ...makeWrongTimes(hours, minutes, 3, true)]);
+                    return {
+                        type: 'choice',
+                        question: 'מה השעה?',
+                        displayHTML: '<div class="question-text">מה השעה?</div>',
+                        answer: fmtTime(hours, minutes),
+                        choices: choices,
+                        hint: minutes === 0
+                            ? '💡 המחוג הארוך על 12 = שעה עגולה!'
+                            : '💡 המחוג הארוך על 6 = וחצי!',
+                        visualAid: `<div class="clock-display" style="margin:0 auto;">${createClockSVG(hours, minutes)}</div>`,
+                        explain: () => minutes === 0
+                            ? `המחוג הארוך על 12 = שעה עגולה. המחוג הקצר על ${hours}. השעה ${fmtTime(hours, 0)}!`
+                            : `המחוג הארוך על 6 = חצי שעה. המחוג הקצר ליד ${hours}. השעה ${fmtTime(hours, 30)}!`
+                    };
+                } else if (qType === 2) {
+                    // Digital to analog: show digital time, pick correct clock
+                    const minutes = [0, 30][randInt(0, 1)];
+                    const correctIdx = randInt(0, 2);
+                    const labels = ['\u05D0', '\u05D1', '\u05D2']; // א ב ג
+
+                    const clockTimes = [];
+                    for (let i = 0; i < 3; i++) {
+                        if (i === correctIdx) {
+                            clockTimes.push({ h: hours, m: minutes });
+                        } else {
+                            let wh, wm;
+                            do {
+                                wh = randInt(1, 12);
+                                wm = [0, 30][randInt(0, 1)];
+                            } while ((wh === hours && wm === minutes) || clockTimes.some(t => t.h === wh && t.m === wm));
+                            clockTimes.push({ h: wh, m: wm });
+                        }
+                    }
+
+                    const clocksHTML = clockTimes.map((t, i) =>
+                        `<div style="text-align:center;width:100px;">` +
+                        `<div style="font-weight:bold;font-size:1.3rem;color:#e67e22;margin-bottom:0.3rem;">${labels[i]}</div>` +
+                        `<div style="width:90px;height:90px;margin:0 auto;">${createClockSVG(t.h, t.m)}</div>` +
+                        `</div>`
+                    ).join('');
+
+                    return {
+                        type: 'choice',
+                        question: `באיזה שעון השעה ${fmtTime(hours, minutes)}?`,
+                        displayHTML: `<div class="question-text">באיזה שעון השעה ${fmtTime(hours, minutes)}?</div>`,
+                        answer: labels[correctIdx],
+                        choices: labels,
+                        hint: minutes === 0
+                            ? `💡 חפש שעון שהמחוג הארוך על 12 והקצר על ${hours}!`
+                            : `💡 חפש שעון שהמחוג הארוך על 6 והקצר ליד ${hours}!`,
+                        visualAid: `<div style="display:flex;justify-content:center;gap:1rem;margin:0 auto;">${clocksHTML}</div>`,
+                        explain: () => `השעה ${fmtTime(hours, minutes)} מוצגת בשעון ${labels[correctIdx]}!`
+                    };
+                } else {
+                    // Minutes in half hour / full hour
+                    if (randInt(0, 1) === 0) {
+                        return {
+                            type: 'input',
+                            question: 'כמה דקות יש בחצי שעה?',
+                            displayHTML: '<div class="question-text">בשעה אחת יש 60 דקות.<br>כמה דקות יש ב<span class="tutorial-highlight">חצי</span> שעה?</div>',
+                            answer: 30,
+                            hint: '💡 בשעה יש 60 דקות. חצי מ-60 זה...',
+                            explain: () => 'בשעה יש 60 דקות. חצי מ-60 = 30 דקות!'
+                        };
+                    } else {
+                        return {
+                            type: 'input',
+                            question: 'כמה דקות יש בשעה שלמה?',
+                            displayHTML: '<div class="question-text">כמה דקות יש בשעה שלמה?</div>',
+                            answer: 60,
+                            hint: '💡 בשעה אחת יש... דקות?',
+                            explain: () => 'בשעה שלמה יש 60 דקות!'
+                        };
                     }
                 }
-                const choices = shuffle([timeStr, ...wrongTimes]);
 
-                const clockHint = minutes === 0 ? `💡 המחוג הארוך על 12 = שעה עגולה. תסתכל על המחוג הקצר!`
-                    : minutes === 30 ? `💡 המחוג הארוך על 6 = וחצי. תסתכל על המחוג הקצר!`
-                    : `💡 המחוג הארוך מצביע על ${minutes / 5}. כל מספר = 5 דקות`;
-                return {
-                    type: 'choice',
-                    question: `מה השעה?`,
-                    displayHTML: `<div class="question-text">מה השעה?</div>`,
-                    answer: timeStr,
-                    choices: choices,
-                    hint: clockHint,
-                    visualAid: `<div class="clock-display" style="margin:0 auto;">${createClockSVG(hours, minutes)}</div>`,
-                    explain: () => {
-                        if (minutes === 0) {
-                            return `המחוג הארוך מצביע על 12 (שעה עגולה), והמחוג הקצר מצביע על ${hours}. לכן השעה היא ${timeStr}!`;
-                        }
-                        return `המחוג הארוך מצביע על 6 (חצי שעה), והמחוג הקצר בין ${hours} ל-${hours === 12 ? 1 : hours + 1}. לכן השעה היא ${timeStr}!`;
-                    }
-                };
+            // ===== HARD (7-9): Duration & sequences =====
             } else {
-                // Ask what the hour hand points to
-                return {
-                    type: 'input',
-                    question: `על איזה מספר המחוג הקצר מצביע?`,
-                    displayHTML: `<div class="question-text">על איזה מספר המחוג הקצר מצביע?</div>`,
-                    answer: hours,
-                    hint: `💡 המחוג הקצר (העבה) מראה את השעה. חפש לאן הוא מצביע!`,
-                    visualAid: `<div class="clock-display" style="margin:0 auto;">${createClockSVG(hours, minutes)}</div>`,
-                    explain: () => `המחוג הקצר (העבה) מצביע על ${hours}. השעה היא ${timeStr}!`
-                };
+                const qType = (difficulty - 7) % 3;
+
+                if (qType === 0) {
+                    // Add half hour
+                    const minutes = [0, 30][randInt(0, 1)];
+                    const result = addTime(hours, minutes, 30);
+                    const resultStr = fmtTime(result.hours, result.minutes);
+                    const choices = shuffle([resultStr, ...makeWrongTimes(result.hours, result.minutes, 3, true)]);
+                    return {
+                        type: 'choice',
+                        question: `עכשיו השעה ${fmtTime(hours, minutes)}. מה תהיה השעה אחרי חצי שעה?`,
+                        displayHTML: `<div class="question-text">עכשיו השעה ${fmtTime(hours, minutes)}.<br>מה תהיה השעה אחרי <span class="tutorial-highlight">חצי שעה</span>?</div>`,
+                        answer: resultStr,
+                        choices: choices,
+                        hint: `💡 חצי שעה = 30 דקות. תוסיף 30 דקות ל-${fmtTime(hours, minutes)}!`,
+                        visualAid: `<div class="clock-display" style="margin:0 auto;">${createClockSVG(hours, minutes)}</div>`,
+                        explain: () => `${fmtTime(hours, minutes)} + חצי שעה = ${resultStr}!`
+                    };
+                } else if (qType === 1) {
+                    // Add full hour - word problem
+                    const minutes = [0, 30][randInt(0, 1)];
+                    const result = addTime(hours, minutes, 60);
+                    const resultStr = fmtTime(result.hours, result.minutes);
+                    const choices = shuffle([resultStr, ...makeWrongTimes(result.hours, result.minutes, 3, true)]);
+
+                    const scenarios = [
+                        `יעל יצאה לטיול בשעה ${fmtTime(hours, minutes)}.\nהיא חזרה אחרי שעה.\nמתי חזרה?`,
+                        `אדם התחיל לצפות בסרט בשעה ${fmtTime(hours, minutes)}.\nהסרט נמשך שעה.\nמתי הסרט נגמר?`,
+                        `השיעור התחיל בשעה ${fmtTime(hours, minutes)}.\nאורך השיעור שעה.\nמתי השיעור נגמר?`
+                    ];
+                    const scenario = scenarios[randInt(0, scenarios.length - 1)];
+
+                    return {
+                        type: 'choice',
+                        question: scenario,
+                        displayHTML: `<div class="question-text">${scenario.replace(/\n/g, '<br>')}</div>`,
+                        answer: resultStr,
+                        choices: choices,
+                        hint: `💡 תוסיף שעה אחת (60 דקות) ל-${fmtTime(hours, minutes)}!`,
+                        visualAid: `<div class="clock-display" style="margin:0 auto;">${createClockSVG(hours, minutes)}</div>`,
+                        explain: () => `${fmtTime(hours, minutes)} + שעה = ${resultStr}!`
+                    };
+                } else {
+                    // Bus sequence - arrives every half hour
+                    const startHour = randInt(5, 9);
+                    const busNum = randInt(2, 4);
+                    const result = addTime(startHour, 0, 30 * (busNum - 1));
+                    const resultStr = fmtTime(result.hours, result.minutes);
+                    const ordinal = ['\u05E9\u05E0\u05D9', '\u05E9\u05DC\u05D9\u05E9\u05D9', '\u05E8\u05D1\u05D9\u05E2\u05D9'][busNum - 2]; // שני שלישי רביעי
+                    const choices = shuffle([resultStr, ...makeWrongTimes(result.hours, result.minutes, 3, true)]);
+
+                    return {
+                        type: 'choice',
+                        question: `האוטובוס מגיע כל חצי שעה.\nהראשון בשעה ${fmtTime(startHour, 0)}.\nמתי מגיע ה${ordinal}?`,
+                        displayHTML: `<div class="question-text">\u05D4\u05D0\u05D5\u05D8\u05D5\u05D1\u05D5\u05E1 \u05DE\u05D2\u05D9\u05E2 \u05DB\u05DC \u05D7\u05E6\u05D9 \u05E9\u05E2\u05D4.<br>\u05D4\u05E8\u05D0\u05E9\u05D5\u05DF \u05D1\u05E9\u05E2\u05D4 ${fmtTime(startHour, 0)}.<br>\u05DE\u05EA\u05D9 \u05DE\u05D2\u05D9\u05E2 \u05D4${ordinal}?</div>`,
+                        answer: resultStr,
+                        choices: choices,
+                        hint: `💡 הראשון ב-${fmtTime(startHour, 0)}. הבא אחרי חצי שעה...`,
+                        explain: () => {
+                            let expl = `הראשון: ${fmtTime(startHour, 0)}`;
+                            for (let i = 1; i < busNum; i++) {
+                                const t = addTime(startHour, 0, 30 * i);
+                                expl += ` → ${fmtTime(t.hours, t.minutes)}`;
+                            }
+                            return expl + ` = ה${ordinal}!`;
+                        }
+                    };
+                }
             }
         }
     }
