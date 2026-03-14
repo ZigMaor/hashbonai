@@ -1480,6 +1480,16 @@ const App = {
         });
     },
 
+    confirmClearCache() {
+        this.showConfirm('שימו לב! ניקוי הזיכרון ימחק את כל ההתקדמות, הניקוד, הסיפורים ופרטי השחקן. לא ניתן לשחזר! להמשיך?', () => {
+            localStorage.removeItem('hashbonai_state');
+            localStorage.removeItem('hashbonai_stories');
+            localStorage.removeItem('hashbonai_player');
+            localStorage.removeItem('hashbonai_a11y');
+            window.location.reload();
+        });
+    },
+
     // ==========================================
     // CONFIRM DIALOG
     // ==========================================

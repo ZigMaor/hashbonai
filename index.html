@@ -9,7 +9,7 @@
     <meta name="referrer" content="no-referrer">
     <!-- ACCESSIBILITY: Unique descriptive Hebrew title -->
     <title>חשבונאי - הרפתקת חשבון ושפה!</title>
-    <link rel="stylesheet" href="style.css?v=10">
+    <link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
 
@@ -239,6 +239,11 @@
         <!-- Stories Gallery Button -->
         <div class="stories-btn-container">
             <button class="btn btn-stories" onclick="App.showStoriesGallery()" aria-label="עבור לגלריית הסיפורים שלי">📖 הסיפורים שלי</button>
+        </div>
+
+        <!-- Clear cache button -->
+        <div class="clear-cache-container" style="text-align:center;margin:1rem 0 0.5rem;">
+            <button class="btn btn-clear-cache" onclick="App.confirmClearCache()" aria-label="ניקוי זיכרון מטמון">🗑️ ניקוי זיכרון</button>
         </div>
 
         <!-- ACCESSIBILITY: Link to accessibility statement from dashboard -->
@@ -554,6 +559,6 @@
 
     <script src="modules.js?v=7"></script>
     <script src="hebrew_modules.js?v=6"></script>
-    <script src="app.js?v=6"></script>
+    <script src="app.js?v=7"></script>
 </body>
 </html>

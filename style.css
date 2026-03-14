@@ -2149,6 +2149,22 @@ a:focus-visible {
     box-sizing: border-box;
 }
 
+/* ---------- Clear Cache Button ---------- */
+.btn-clear-cache {
+    background: transparent;
+    color: #999;
+    border: 1px solid #ddd;
+    padding: 0.4rem 1.2rem;
+    font-size: 0.85rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-clear-cache:hover {
+    color: var(--red);
+    border-color: var(--red);
+}
+
 /* ---------- Dashboard Footer Nav ---------- */
 .dashboard-footer-nav {
     text-align: center;
