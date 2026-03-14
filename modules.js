@@ -554,7 +554,7 @@ const MODULES = [
             return {
                 type: 'input',
                 question: `${a} × ${b} = ?`,
-                displayHTML: `<span>${a}</span> <span class="operator-symbol">×</span> <span>${b}</span> <span class="operator-symbol">=</span> <span style="color:#4A90D9;">?</span>`,
+                displayHTML: `<div class="question-text"><div style="direction:ltr;display:inline-block;">${a} × ${b} = <span style="color:#4A90D9;">?</span></div></div>`,
                 answer,
                 hint: `💡 חיבור חוזר: ${a} × ${b} = ${Array(a).fill(b).join(' + ')}`,
                 visualAid: this._groupsVisual(a, b),
@@ -571,7 +571,7 @@ const MODULES = [
             return {
                 type: 'input',
                 question: `${addStr} = ?`,
-                displayHTML: `<span>${addStr}</span> <span class="operator-symbol">=</span> <span style="color:#4A90D9;">?</span>`,
+                displayHTML: `<div class="question-text"><div style="direction:ltr;display:inline-block;">${addStr} = <span style="color:#4A90D9;">?</span></div></div>`,
                 answer,
                 hint: `💡 זה בעצם ${a} × ${b}! חיבור חוזר = כפל`,
                 visualAid: this._groupsVisual(a, b),
@@ -603,7 +603,7 @@ const MODULES = [
             return {
                 type: 'choice',
                 question: `${addStr} = ?`,
-                displayHTML: `<div style="font-size:1.3rem;margin-bottom:0.5rem;">איזה תרגיל כפל מתאים?</div><div style="font-size:1.5rem;">${addStr}</div>`,
+                displayHTML: `<div class="question-text">איזה תרגיל כפל מתאים?<br><div style="direction:ltr;display:inline-block;">${addStr}</div></div>`,
                 answer: correctStr,
                 choices: shuffle(choices),
                 hint: `💡 כמה פעמים מופיע ${b}? ← זה מספר הקבוצות`,
@@ -628,7 +628,7 @@ const MODULES = [
             return {
                 type: 'input',
                 question: `מה המספר הבא בסדרה?`,
-                displayHTML: `<div style="font-size:1.1rem;margin-bottom:0.3rem;">ספירה בקפיצות של ${step}:</div><div style="font-size:1.5rem;">${seqDisplay}${questionMarks}</div>`,
+                displayHTML: `<div class="question-text">ספירה בקפיצות של ${step}:<br><div style="direction:ltr;display:inline-block;">${seqDisplay}${questionMarks}</div></div>`,
                 answer,
                 hint: `💡 כל פעם מוסיפים ${step}. מה בא אחרי ${visiblePart[visiblePart.length - 1]}?`,
                 visualAid: this._numberLineVisual(step, count),
@@ -648,7 +648,7 @@ const MODULES = [
                 return {
                     type: 'input',
                     question: `${jumpCount} קפיצות של ${jumpSize} על ישר המספרים — מגיעים ל...?`,
-                    displayHTML: `<div style="font-size:1.1rem;margin-bottom:0.3rem;">${jumpCount} קפיצות של ${jumpSize} על ישר המספרים</div><div style="font-size:1.5rem;">נקודת הסיום = <span style="color:#4A90D9;">?</span></div>`,
+                    displayHTML: `<div class="question-text">${jumpCount} קפיצות של ${jumpSize} על ישר המספרים<br>נקודת הסיום = <span style="color:#4A90D9;">?</span></div>`,
                     answer: endpoint,
                     hint: `💡 ${jumpCount} × ${jumpSize} = ?`,
                     visualAid: this._numberLineVisual(jumpSize, jumpCount),
@@ -659,7 +659,7 @@ const MODULES = [
                 return {
                     type: 'input',
                     question: `קפיצות של ${jumpSize} עד ${endpoint} — כמה קפיצות?`,
-                    displayHTML: `<div style="font-size:1.1rem;margin-bottom:0.3rem;">קפיצות של ${jumpSize} על ישר המספרים עד ${endpoint}</div><div style="font-size:1.5rem;">מספר הקפיצות = <span style="color:#4A90D9;">?</span></div>`,
+                    displayHTML: `<div class="question-text">קפיצות של ${jumpSize} על ישר המספרים עד ${endpoint}<br>מספר הקפיצות = <span style="color:#4A90D9;">?</span></div>`,
                     answer: jumpCount,
                     hint: `💡 כמה פעמים ${jumpSize} נכנס ב-${endpoint}?`,
                     visualAid: this._numberLineVisual(jumpSize, jumpCount),
@@ -680,7 +680,7 @@ const MODULES = [
                 return {
                     type: 'input',
                     question: `כמה ריבועים יש במלבן?`,
-                    displayHTML: `<div style="font-size:1.1rem;margin-bottom:0.3rem;">מלבן: ${rows} שורות × ${cols} טורים</div><div style="font-size:1.5rem;">סך הכל = <span style="color:#4A90D9;">?</span></div>`,
+                    displayHTML: `<div class="question-text">מלבן: ${rows} שורות × ${cols} טורים<br>סך הכל = <span style="color:#4A90D9;">?</span></div>`,
                     answer,
                     hint: `💡 ${rows} שורות × ${cols} טורים = ?`,
                     visualAid: rectHTML,
@@ -699,7 +699,7 @@ const MODULES = [
                 return {
                     type: 'choice',
                     question: `איזה תרגיל כפל מתאים למלבן?`,
-                    displayHTML: `<div style="font-size:1.1rem;margin-bottom:0.3rem;">כמה שורות? כמה טורים?</div>`,
+                    displayHTML: `<div class="question-text">כמה שורות? כמה טורים?</div>`,
                     answer: correctStr,
                     choices: shuffle(unique.slice(0, 4)),
                     hint: `💡 ספרו: כמה שורות? כמה טורים?`,
@@ -730,7 +730,7 @@ const MODULES = [
             return {
                 type: 'input',
                 question: problemText,
-                displayHTML: `<div style="font-size:1.3rem;line-height:2;">${s.emoji} ${problemText}</div>`,
+                displayHTML: `<div class="question-text">${s.emoji} ${problemText}</div>`,
                 answer,
                 hint: `💡 ${groups} ${s.container} × ${perGroup} ${s.item} = ?`,
                 visualAid: this._groupsVisual(groups, perGroup),
@@ -759,7 +759,7 @@ const MODULES = [
             return {
                 type: 'choice',
                 question: `לפי חוק החילוף: ${a} × ${b} = ?`,
-                displayHTML: `<div style="font-size:1.1rem;margin-bottom:0.3rem;">חוק החילוף:</div><div style="font-size:1.5rem;">${a} × ${b} = <span style="color:#4A90D9;">?</span></div>`,
+                displayHTML: `<div class="question-text">חוק החילוף:<br><div style="direction:ltr;display:inline-block;">${a} × ${b} = <span style="color:#4A90D9;">?</span></div></div>`,
                 answer: correctStr,
                 choices: shuffle(choices),
                 hint: `💡 חוק החילוף: הסדר בכפל לא משנה! ${a} × ${b} = ${b} × ${a}`,
